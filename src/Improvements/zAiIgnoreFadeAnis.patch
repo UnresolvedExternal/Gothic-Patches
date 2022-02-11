@@ -1,0 +1,129 @@
+// Fade animations should not be taken into account in the controller or AI logic:
+// they are only needed for visual smoothness.
+//
+// Currently, only the following functions caused problems:
+// 1) oCAniCtrl_Human::IsStateAniActive
+// 2) oCAniCtrl_Human::IsWalking
+// 3) zCModel::IsStateActive
+
+#engine [G2A]
+	#patch [zAiIgnoreFadeAnis]
+		// engine specific
+		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = 0x006ADEAC		
+		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = 0x006ADEBB
+		INT text_zCModel_IsStateActive_cmp_layers = 0x0057DDDE
+		INT text_zCModel_IsStateActive_fail_cmp_layers = 0x0057DEE7
+		
+		INT field_oCAniCtrl_Human__s_walkl = 0x1014
+		INT field_oCAniCtrl_Human__s_walkr = 0x1020
+		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C		
+		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zCAIPlayer_model = 0x68
+		
+		INT func_oCAniCtrl_Human_IsWalking = 0x006AE0E0
+		INT func_zCModel_GetActiveAni = 0x0057AB60
+		// end of engine specific
+		
+		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
+			orgcode
+			
+			push eax
+			mov eax, [edx]
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			pop eax
+			
+			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
+		#/assembler
+		
+		// bool zCModel::IsAniNotFading(int)
+		#assembler [func_zCModel_IsAniNotFading]			
+			mov edx, [esp+4]
+			
+			push esi
+			mov esi, ecx
+			
+			push edi
+			mov edi, edx
+			
+			push edi
+			call $func_zCModel_GetActiveAni
+			
+			test eax, eax
+			jz return
+			
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			jnz fail
+			
+			mov eax, 1
+			jmp return
+			
+		fail:
+			xor eax, eax
+			
+		return:
+			pop edi
+			pop esi
+			ret 4
+		#/assembler
+		
+		// void oCAniCtrl_Human::HookIsWalking()
+		#assembler [func_oCAniCtrl_Human_HookIsWalking]
+			push esi
+			push edi
+			
+			mov edi, [ecx+$field_zCAIPlayer_model]
+			test edi, edi
+			jz fail
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__t_walk_2_walkl]
+			push eax
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walkr]
+			push eax
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walkl]
+			push eax
+			
+			mov esi, 2
+			
+		check:
+			mov ecx, edi
+			call $func_zCModel_IsAniNotFading
+			
+			test eax, eax
+			jnz return
+
+			test esi, esi
+			jz fail
+			
+			dec esi
+			jmp check
+			
+		fail:
+			xor eax, eax
+			
+		return:
+			lea esp, [esp+esi*4]
+			
+			pop edi
+			pop esi
+			ret
+		#/assembler
+		
+		JMP(func_oCAniCtrl_Human_IsWalking, func_oCAniCtrl_Human_HookIsWalking)
+		
+		#assembler [text_zCModel_IsStateActive_cmp_layers]
+			orgcode
+			
+			push eax
+			mov eax, [ebp]
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			pop eax
+			
+			jnz $text_zCModel_IsStateActive_fail_cmp_layers
+		#/assembler
+	#/patch
+#/engine
