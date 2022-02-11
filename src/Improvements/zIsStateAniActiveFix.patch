@@ -1,0 +1,25 @@
+// Fade animations should not be taken into account in the controller logic:
+// they are only needed for visual smoothness
+
+#engine [G2A]
+	#patch [zIsStateAniActiveFix]
+		// engine specific
+		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = 0x006ADEAC		
+		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = 0x006ADEBB
+		
+		INT field_zCModelAniActive_isFadingOut = 0x1C
+		// end of engine specific
+		
+		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
+			orgcode
+			
+			push eax
+			mov eax, [edx]
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			pop eax
+			
+			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
+		#/assembler
+	#/patch
+#/engine

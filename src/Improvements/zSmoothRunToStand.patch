@@ -2,8 +2,6 @@
 	#patch [zSmoothRunToStand]
 		// engine specific
 		INT text_oCAniCtrl_Human__Stand_jz_npc_GetWeaponMode = 0x006B762E
-		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = 0x006ADEAC
-		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = 0x006ADEBB
 		INT text_oCAIHuman_FightMelee_call_IsWalking_g1 = 0x00696F9F
 		INT text_oCAIHuman_FightMelee_call_IsWalking_g2 = 0x00697907
 		
@@ -98,17 +96,5 @@
 		
 		CALL(text_oCAIHuman_FightMelee_call_IsWalking_g1, func_oCAniCtrl_Human_IsWalking_check_fadeout)
 		CALL(text_oCAIHuman_FightMelee_call_IsWalking_g2, func_oCAniCtrl_Human_IsWalking_check_fadeout)
-		
-		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
-			orgcode
-			
-			push eax
-			mov eax, [edx]
-			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
-			test eax, eax
-			pop eax
-			
-			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
-		#/assembler
 	#/patch
 #/engine
