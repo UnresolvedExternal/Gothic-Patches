@@ -1,0 +1,157 @@
+#engine [G2A]
+	#patch [zFightNoTurnAnis]
+		// engine specific
+		INT text_oCNpc_EV_DrawWeapon_call_human_ai_PC_Turnings = 0x0074D224
+		INT text_oCNpc_EV_DrawWeapon2_call_DoDoAniEvents = 0x0074D657
+		INT text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings = 0x0074E3F5
+		INT text_oCNpc_EV_RemoveWeapon1_call_anictrl_StopTurnAnis = 0x0074E4FC
+		INT text_oCNpc_EV_AttackRun_call_human_ai_PC_Turnings = 0x00751957
+		
+		INT stack_oCNpc_EV_DrawWeapon_model = 0x68 + 0x8 - 0x54
+		
+		INT field_oCMsgWeapon_duringRun = 0x48
+		INT field_oCAniCtrl_Human__t_turnl = 0x1028
+		INT field_oCAniCtrl_Human__t_turnr = 0x102C
+		INT field_oCAniCtrl_Human__s_walk = 0x1008
+		INT field_oCNpc_human_ai = 0x97C
+		
+		INT func_zCModel_GetAniFromAniID = 0x00472F50
+		INT func_zCModel_IsAniActive = 0x00472F90
+		INT func_oCAIHuman_PC_Turnings = 0x0069A940
+		// end of engine specific
+		
+		// void oCAIHuman::PC_Turnings_no_ani(int)
+		#assembler [func_oCAIHuman_PC_Turnings_no_ani]
+			xor edx, edx
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__t_turnl]
+			push eax
+			mov [ecx+$field_oCAniCtrl_Human__t_turnl], edx
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__t_turnr]
+			push eax
+			mov [ecx+$field_oCAniCtrl_Human__t_turnr], edx
+		
+			push ecx
+			
+			push dword ptr [esp+8]
+			call $func_oCAIHuman_PC_Turnings
+		
+			pop ecx
+			
+			pop eax
+			mov [ecx+$field_oCAniCtrl_Human__t_turnr], eax
+			
+			pop eax
+			mov [ecx+$field_oCAniCtrl_Human__t_turnl], eax
+			
+			ret 4
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_DrawWeapon_call_human_ai_PC_Turnings]
+			test byte ptr [ebp+$field_oCMsgWeapon_duringRun], 1
+			jz pop_arg
+			
+			push ecx
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			mov ecx, [esp+$stack_oCNpc_EV_DrawWeapon_model]
+			call $func_zCModel_GetAniFromAniID
+			
+			push eax
+			mov ecx, [esp+$stack_oCNpc_EV_DrawWeapon_model]
+			call $func_zCModel_IsAniActive
+			
+			pop ecx
+			
+			test eax, eax
+			jz continue
+			
+			call $func_oCAIHuman_PC_Turnings_no_ani
+			jmp return
+			
+		continue:
+			call $func_oCAIHuman_PC_Turnings
+			jmp return
+			
+		pop_arg:
+			add esp, 4
+			
+		return:
+		#/assembler
+
+		#assembler [text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings]
+			test byte ptr [edi+$field_oCMsgWeapon_duringRun], 1
+			jz continue
+			
+			push ecx
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			mov ecx, esi
+			call $func_zCModel_GetAniFromAniID
+			
+			push eax
+			mov ecx, esi
+			call $func_zCModel_IsAniActive
+			
+			pop ecx
+			
+			test eax, eax
+			jz continue
+			
+			call $func_oCAIHuman_PC_Turnings_no_ani
+			jmp return
+			
+		continue:
+			call $func_oCAIHuman_PC_Turnings
+			
+		return:
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_RemoveWeapon1_call_anictrl_StopTurnAnis]
+			push ecx
+			
+			push 0
+			call $func_oCAIHuman_PC_Turnings
+			
+			pop ecx
+			orgcode
+		#/assembler
+
+		#assembler [text_oCNpc_EV_AttackRun_call_human_ai_PC_Turnings]
+			push ecx
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			mov ecx, ebx
+			call $func_zCModel_GetAniFromAniID
+			
+			push eax
+			mov ecx, ebx
+			call $func_zCModel_IsAniActive
+			
+			pop ecx
+			
+			test eax, eax
+			jz continue
+			
+			call $func_oCAIHuman_PC_Turnings_no_ani
+			jmp return
+			
+		continue:
+			call $func_oCAIHuman_PC_Turnings
+			
+		return:
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_DrawWeapon2_call_DoDoAniEvents]
+			orgcode
+			
+			push 0
+			mov ecx, [esi+$field_oCNpc_human_ai]
+			call $func_oCAIHuman_PC_Turnings_no_ani
+		#/assembler
+	#/patch
+#/engine

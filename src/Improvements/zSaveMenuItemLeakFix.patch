@@ -1,0 +1,108 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zSaveMenuItemLeakFix]
+		// engine specific
+		INT asm_start = ZenDef(0x0042D5FB, 0x00430847, 0x0042FB3E, 0x0042FE5E)
+		
+		INT field_zCMenuItem_m_item_PlayTime = 0xCD8
+		INT field_zCMenuItem_m_item_DateTime = 0xCDC
+		INT field_zCMenuItem_m_item_WorldName = 0xCE0
+		INT field_zCMenuItem_m_item_GameTime = 0xCE4
+		// end of engine specific
+	
+		IF ZenDef(1, 2, 3, 4) <= 2
+			INT field_zCMenuItem_m_iRefCtr = 0x358
+			INT field_zCMenuItem_registeredCPP = 0x3CC
+			INT vfunc_zCMenuItem_scalar_destructor = 0x20
+		
+			#assembler [zCMenuItem_Release]
+				mov eax, [ecx+$field_zCMenuItem_m_iRefCtr]
+				dec eax
+				test eax, eax
+				mov [ecx+$field_zCMenuItem_m_iRefCtr], eax
+				jg return
+			
+				mov eax, [ecx+$field_zCMenuItem_registeredCPP]
+				test eax, eax
+				jnz return
+				
+				mov eax, [eax]
+				push 1
+				call [eax+$vfunc_zCMenuItem_scalar_destructor]
+			
+			return:
+				ret
+				
+			#/assembler
+			
+			#assembler [asm_start]
+				orgcode
+				
+			m_item_PlayTime:
+				mov ecx, [ebp+$field_zCMenuItem_m_item_PlayTime]
+				test ecx, ecx
+				jz m_item_DateTime
+				call $zCMenuItem_Release
+				mov [ebp+$field_zCMenuItem_m_item_PlayTime], esi
+				
+			m_item_DateTime:
+				mov ecx, [ebp+$field_zCMenuItem_m_item_DateTime]
+				test ecx, ecx
+				jz m_item_WorldName
+				call $zCMenuItem_Release
+				mov [ebp+$field_zCMenuItem_m_item_DateTime], esi
+				
+			m_item_WorldName:
+				mov ecx, [ebp+$field_zCMenuItem_m_item_WorldName]
+				test ecx, ecx
+				jz m_item_GameTime
+				call $zCMenuItem_Release
+				mov [ebp+$field_zCMenuItem_m_item_WorldName], esi
+				
+			m_item_GameTime:
+				mov ecx, [ebp+$field_zCMenuItem_m_item_GameTime]
+				test ecx, ecx
+				jz return
+				call $zCMenuItem_Release
+				mov [ebp+$field_zCMenuItem_m_item_GameTime], esi
+				
+			return:
+			#/assembler
+		ELSE
+			INT func_zCMenuItem_Release = ZenDef(0x0, 0x0, 0x0047C150, 0x0047D620)
+			
+			#assembler [asm_start]
+				orgcode
+				
+			m_item_PlayTime:
+				mov ecx, [esi+$field_zCMenuItem_m_item_PlayTime]
+				test ecx, ecx
+				jz m_item_DateTime
+				call $func_zCMenuItem_Release
+				mov [esi+$field_zCMenuItem_m_item_PlayTime], edi
+				
+			m_item_DateTime:
+				mov ecx, [esi+$field_zCMenuItem_m_item_DateTime]
+				test ecx, ecx
+				jz m_item_WorldName
+				call $func_zCMenuItem_Release
+				mov [esi+$field_zCMenuItem_m_item_DateTime], edi
+				
+			m_item_WorldName:
+				mov ecx, [esi+$field_zCMenuItem_m_item_WorldName]
+				test ecx, ecx
+				jz m_item_GameTime
+				call $func_zCMenuItem_Release
+				mov [esi+$field_zCMenuItem_m_item_WorldName], edi
+				
+			m_item_GameTime:
+				mov ecx, [esi+$field_zCMenuItem_m_item_GameTime]
+				test ecx, ecx
+				jz return
+				call $func_zCMenuItem_Release
+				mov [esi+$field_zCMenuItem_m_item_GameTime], edi
+				
+			return:
+			#/assembler
+		END
+	#/patch
+#/engine

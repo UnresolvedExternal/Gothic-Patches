@@ -1,0 +1,114 @@
+#engine [G2A]
+	#patch [zSmoothRunToStand]
+		// engine specific
+		INT text_oCAniCtrl_Human__Stand_jz_npc_GetWeaponMode = 0x006B762E
+		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = 0x006ADEAC
+		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = 0x006ADEBB
+		INT text_oCAIHuman_FightMelee_call_IsWalking_g1 = 0x00696F9F
+		INT text_oCAIHuman_FightMelee_call_IsWalking_g2 = 0x00697907
+		
+		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zCAIPlayer_model = 0x68
+		INT field_oCAniCtrl_Human__s_walk = 0x1008
+		INT field_oCAniCtrl_Human__s_walkl = 0x1014
+		INT field_oCAniCtrl_Human__s_walkr = 0x1020
+		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C
+		
+		INT func_zCModel_IsAniActive = 0x00472F90
+		INT func_zCModel_GetActiveAni = 0x0057AB60
+		// end of engine specific
+		
+		// bool zCModel::IsAniNotEnding(int)
+		#assembler [func_zCModel_IsAniNotEnding]			
+			mov edx, [esp+4]
+			
+			push esi
+			mov esi, ecx
+			
+			push edi
+			mov edi, edx
+			
+			push edi
+			call $func_zCModel_GetActiveAni
+			
+			test eax, eax
+			jz return
+			
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			jnz fail
+			
+			mov eax, 1
+			jmp return
+			
+		fail:
+			xor eax, eax
+			
+		return:
+			pop edi
+			pop esi
+			ret 4
+		#/assembler
+		
+		// void oCAniCtrl_Human::IsWalking_check_fadeout()
+		#assembler [func_oCAniCtrl_Human_IsWalking_check_fadeout]
+			push esi
+			push edi
+			
+			mov edi, [ecx+$field_zCAIPlayer_model]
+			test edi, edi
+			jz fail
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__t_walk_2_walkl]
+			push eax
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walkr]
+			push eax
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walkl]
+			push eax
+			
+			mov esi, 2
+			
+		check:
+			mov ecx, edi
+			call $func_zCModel_IsAniNotEnding
+			
+			test eax, eax
+			jnz return
+
+			test esi, esi
+			jz fail
+			
+			dec esi
+			jmp check
+			
+		fail:
+			xor eax, eax
+			
+		return:
+			lea esp, [esp+esi*4]
+			
+			pop edi
+			pop esi
+			ret
+		#/assembler
+		
+		MemSet(text_oCAniCtrl_Human__Stand_jz_npc_GetWeaponMode, '90', 2)
+		
+		CALL(text_oCAIHuman_FightMelee_call_IsWalking_g1, func_oCAniCtrl_Human_IsWalking_check_fadeout)
+		CALL(text_oCAIHuman_FightMelee_call_IsWalking_g2, func_oCAniCtrl_Human_IsWalking_check_fadeout)
+		
+		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
+			orgcode
+			
+			push eax
+			mov eax, [edx]
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			pop eax
+			
+			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
+		#/assembler
+	#/patch
+#/engine

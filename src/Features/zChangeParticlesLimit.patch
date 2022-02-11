@@ -1,0 +1,10 @@
+#engine [G2A]
+	#patch [zChangeParticlesLimit]
+		INT NewLimit = 100000;
+		INT @0x005ACB85 = 960 * NewLimit
+		INT @0x005ACBA2 = NewLimit
+		INT @0x005ACBCF = NewLimit
+		INT @0x005ADA72 = NewLimit
+		INT @0x005ADA89 = NewLimit
+	#/patch
+#/engine

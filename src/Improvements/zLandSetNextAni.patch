@@ -1,0 +1,39 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zLandSetNextAni]
+		// engine specific
+		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
+		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
+		
+		INT field_oCAniCtrl_Human__s_walk = 0x1008
+		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
+		
+		INT func_oCAniCtrl_Human_SetNextAni = ZenDef(0x0061B980, 0x0063F320, 0x00647720, 0x006A3FA0)
+		// end of engine specific
+		
+		#assembler [text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni]
+			orgcode
+			
+			mov eax, [esi+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			
+			mov eax, [esi+$field_oCAniCtrl_Human_t_jump_2_stand]
+			push eax
+			
+			mov ecx, esi
+			call $func_oCAniCtrl_Human_SetNextAni	
+		#/assembler
+		
+		#assembler [text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni]
+			orgcode
+			
+			mov eax, [esi+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			
+			mov eax, [esi+$field_oCAniCtrl_Human_t_jump_2_stand]
+			push eax
+			
+			mov ecx, esi
+			call $func_oCAniCtrl_Human_SetNextAni	
+		#/assembler
+	#/patch
+#/engine

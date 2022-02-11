@@ -1,0 +1,27 @@
+#engine [G1, G2A]
+	#patch [zTextViewPos]		
+		// engine specific
+		INT pos_start = ZenDef(0x00638CBA, 0x0, 0x0, 0x006C2E6A)
+		INT size_start = ZenDef(0x00638CDB, 0x0, 0x0, 0x006C2E8B)
+		// end of engine specific
+		
+		INT PosX = 2048
+		INT posY = 1024
+		INT SizeX = 4096
+		INT SizeY = 1024
+
+		#assembler [pos_start]
+			push $PosY
+			push $PosX
+			orgcode+2
+		#/assembler
+		
+		#assembler [size_start]
+			pop eax
+			push $SizeY
+			push $SizeX
+			orgcode+1
+		#/assembler
+	#/patch
+#/engine
+

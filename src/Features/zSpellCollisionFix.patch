@@ -1,0 +1,43 @@
+#engine [G2A]
+    #patch [zSpellCollisionFix]
+	/*
+		// engine specific
+		INT set_level_begin = 0x004924E6
+		INT set_level_length = 0x6
+		
+		INT set_target_begin = 0x00495B9A
+		INT set_target_var_vobHit = 0x14
+		
+		INT field_oCVisualFX_inflictor = 0x4AC
+		INT field_oCVisualFX_origin = 0x4A8
+		INT field_oCVisualFX_emFXCollDyn_S = 0x278
+		// end of engine specific
+		
+		MemSet(set_level_begin, '90', set_level_length) // disable "level = 1" reset in oCVisualFX::Init
+		
+		#assembler [name:set_collided_vob, base:set_target_begin]
+			mov esi, [esp+$set_target_var_vobHit]
+			nop
+			nop
+		#/assembler
+	
+		MemCopy(set_collided_vob, set_target_begin, GetHexSize(set_collided_vob))
+	*/
+        MemSet(0x004924E6, '90', 6) // disable "level = 1" reset in oCVisualFX::Init
+        HEX @0x00495B9A = '8B 74 24 14 90 90' // mov esi, dword ptr [esp+0x14] (use vobHit instead of target)
+        INT @0x00495C76 = 0x4AC // offset: use inflictor instead of origin in C_CanNpcCollideWithSpell call
+        #assembler [0x00495B29]
+            mov eax, dword ptr [ebp+0x4A8] ; origin
+            push eax
+            mov eax, dword ptr [esp+0x18] ; vobHit
+            push eax
+            lea eax, [ebp+0x278] ; emFXCollDyn_S
+            push eax
+            mov ecx, ebp ; this
+            call 0x0048EE80 ; oCVisualFX::CreateAndCastFX
+            mov esi, eax
+			test esi, esi
+			jz 0x00495B9A
+        #/assembler [0x00495B84]
+    #/patch
+#/engine

@@ -1,0 +1,15 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zDoNotLoadFontName]
+		// engine specific
+		INT asm_start = ZenDef(0x006E005F, 0x00718625, 0x0072990B, 0x0078934B)
+		// end of engine specific
+		
+		INT dummyName = CreateMemString("")
+	
+		#assembler [asm_start]
+			add esp, 4
+			push $dummyName
+			orgcode
+		#/assembler
+	#/patch
+#/engine
