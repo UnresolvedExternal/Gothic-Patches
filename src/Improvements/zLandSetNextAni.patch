@@ -1,3 +1,8 @@
+// There are no transitions from T_JUMP_2_STAND to the fight modes.
+// So prompt the engine for the next ani and let it apply blending.
+//
+// The patch requires zAiIgnoreFadeAnis to not affect fight mode actions.
+
 #engine [G1, G1A, G2, G2A]
 	#patch [zLandSetNextAni]
 		// engine specific
