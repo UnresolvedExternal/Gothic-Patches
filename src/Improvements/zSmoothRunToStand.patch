@@ -1,7 +1,7 @@
 #engine [G2A]
 	#patch [zSmoothRunToStand]
 		// engine specific
-		INT text_oCAniCtrl_Human__Stand_jz_npc_GetWeaponMode = 0x006B762E
+		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = 0x006B762E
 		INT text_oCAIHuman_FightMelee_call_IsWalking_g1 = 0x00696F9F
 		INT text_oCAIHuman_FightMelee_call_IsWalking_g2 = 0x00697907
 		
@@ -16,6 +16,6 @@
 		INT func_zCModel_GetActiveAni = 0x0057AB60
 		// end of engine specific
 		
-		MemSet(text_oCAniCtrl_Human__Stand_jz_npc_GetWeaponMode, '90', 2)
+		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
 	#/patch
 #/engine
