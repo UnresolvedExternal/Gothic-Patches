@@ -1,11 +1,15 @@
 // There are no transitions from T_JUMP_2_STAND to the fight modes.
 // So prompt the engine for the next ani and let it apply blending.
+// Also disables instant run to stand transition in the fight mode.
 //
-// The patch requires zAiIgnoreFadeAnis to not affect fight mode actions.
+// IMPORTANT!!!
+// The patch requires zAiIgnoreFadeAnis so that the fade animationы do not affect actions in combat mode.
+// At the moment zAiIgnoreFadeAnis is for G2A engine only.
 
 #engine [G1, G1A, G2, G2A]
-	#patch [zLandSetNextAni]
+	#patch [zSmoothFightToStand]
 		// engine specific
+		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0, 0x0, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
@@ -14,6 +18,8 @@
 		
 		INT func_oCAniCtrl_Human_SetNextAni = ZenDef(0x0061B980, 0x0063F320, 0x00647720, 0x006A3FA0)
 		// end of engine specific
+		
+		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
 		
 		#assembler [text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni]
 			orgcode
