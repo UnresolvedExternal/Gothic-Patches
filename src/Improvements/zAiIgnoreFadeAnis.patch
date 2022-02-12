@@ -5,11 +5,11 @@
 // 1) oCAniCtrl_Human::IsStateAniActive - in BowMode (run to stand)
 // 2) oCAniCtrl_Human::IsWalking - attack-run instead of attack
 
-#engine [G2A]
+#engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
-		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = 0x006ADEAC		
-		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = 0x006ADEBB
+		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
+		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
 		
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
@@ -17,8 +17,8 @@
 		INT field_zCModelAniActive_isFadingOut = 0x1C
 		INT field_zCAIPlayer_model = 0x68
 		
-		INT func_oCAniCtrl_Human_IsWalking = 0x006AE0E0
-		INT func_zCModel_GetActiveAni = 0x0057AB60
+		INT func_oCAniCtrl_Human_IsWalking = ZenDef(0x006257E0, 0x0064A540, 0x00651860, 0x006AE0E0)
+		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
 		// end of engine specific
 		
 		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
@@ -33,7 +33,7 @@
 			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
 		#/assembler
 		
-		// bool zCModel::IsAniNotFading(int)
+		// int zCModel::IsAniNotFading(int)
 		#assembler [func_zCModel_IsAniNotFading]			
 			mov edx, [esp+4]
 			
@@ -65,7 +65,7 @@
 			ret 4
 		#/assembler
 		
-		// void oCAniCtrl_Human::HookIsWalking()
+		// int oCAniCtrl_Human::HookIsWalking()
 		#assembler [func_oCAniCtrl_Human_HookIsWalking]
 			push esi
 			push edi

@@ -4,7 +4,6 @@
 //
 // IMPORTANT!!!
 // The patch requires zAiIgnoreFadeAnis so that the fade animationы do not affect actions in combat mode.
-// At the moment zAiIgnoreFadeAnis is for G2A engine only.
 
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
