@@ -9,7 +9,7 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
 		// engine specific
-		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0, 0x0, 0x0065AC9E, 0x006B762E)
+		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0062DE8E, 0x00653660, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
