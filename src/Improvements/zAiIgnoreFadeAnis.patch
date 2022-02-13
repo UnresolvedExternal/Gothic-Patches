@@ -4,12 +4,18 @@
 // Currently, only the following functions caused problems (with other patches):
 // 1) oCAniCtrl_Human::IsStateAniActive - in BowMode (run to stand)
 // 2) oCAniCtrl_Human::IsWalking - attack-run instead of attack
+// 3) zCModel::StartAni - fading already faded animation instead of an active one
+// 4) oCAniCtrl_Human::PC_JumpForward - run-jump instead of stand-jump  
 
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
 		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
+		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x00628CD0, 0x006554B0, 0x006B1E40)
+		INT text_zCModel_StartAni_mov_ecx_protoAni = ZenDef(0x00561537, 0x00561537, 0x00575DD6, 0x0057B2F6)
+		INT text_zCModel_StartAni_fail_cmp_layers = ZenDef(0x0056159D, 0x0056159D, 0x00575E3C, 0x0057B35C)
+		INT text_zCModel_StartAni_call_FadeOutAni = ZenDef(0x0056160C, 0x0056160C, 0x00575EAB, 0x0057B3CB)
 		
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
@@ -19,6 +25,7 @@
 		
 		INT func_oCAniCtrl_Human_IsWalking = ZenDef(0x006257E0, 0x0064A540, 0x00651860, 0x006AE0E0)
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
+		INT func_zCModel_StopAni = ZenDef(0x00560EE0, 0x00579370, 0x00575790, 0x0057ACB0)
 		// end of engine specific
 		
 		#assembler [text_oCAniCtrl_Human_IsStateAniActive_cmp_layer]
@@ -110,5 +117,36 @@
 		#/assembler
 		
 		JMP(func_oCAniCtrl_Human_IsWalking, func_oCAniCtrl_Human_HookIsWalking)
+		
+		#assembler [text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive]
+			add esp, 4
+			mov eax, [esi+$field_oCAniCtrl_Human__s_walkl]
+			push eax
+			call $func_zCModel_IsAniNotFading
+		#/assembler
+		
+		#assembler [text_zCModel_StartAni_mov_ecx_protoAni]
+			mov ecx, [eax]
+			cmp ecx, ebp
+			je continue
+			
+			mov ecx, [eax+$field_zCModelAniActive_isFadingOut]
+			test ecx, ecx
+			jnz $text_zCModel_StartAni_fail_cmp_layers
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCModel_StartAni_call_FadeOutAni]
+			mov eax, [edi]			
+			cmp eax, ebp
+			jne continue
+			
+			call $func_zCModel_StopAni
+		
+		continue:
+			orgcode
+		#/assembler
 	#/patch
 #/engine
