@@ -1,24 +1,29 @@
-// There are no transitions from T_JUMP_2_STAND to the fight modes.
-// So prompt the engine for the next ani and let it apply blending.
+// Prompt the engine for the ani following t_jump_2_stand and let it apply blending.
+// Prompt the engine for the ani following t_jumpuplow_2_stand (PB mistakenly did it for t_jumpupmid_2_stand).
+//
 // Also disables instant run to stand transition in the fight mode.
 //
 // IMPORTANT!!!
-// The patch requires zAiIgnoreFadeAnis so that the fade animationы do not affect actions in combat mode.
+// The patch requires zAiIgnoreFadeAnis so that the fade animations do not affect actions in combat mode.
 
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
 		// engine specific
 		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0062DE8E, 0x00653660, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
+		int text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
 		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
+		INT field_oCAniCtrl_Human_t_jumpuplow_2_stand = 0xA10
 		
 		INT func_oCAniCtrl_Human_SetNextAni = ZenDef(0x0061B980, 0x0063F320, 0x00647720, 0x006A3FA0)
 		// end of engine specific
 		
 		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
+		
+		INT @text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = field_oCAniCtrl_Human_t_jumpuplow_2_stand
 		
 		#assembler [text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni]
 			orgcode
