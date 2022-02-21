@@ -1,5 +1,6 @@
 // Prompt the engine for the ani following t_jump_2_stand and let it apply blending.
 // Prompt the engine for the ani following t_jumpuplow_2_stand (PB mistakenly did it for t_jumpupmid_2_stand).
+// oCAniCtrl::HitCombo doesn't start the _walkl animation any more. 
 //
 // Also disables instant run to stand transition in the fight mode.
 //
@@ -9,19 +10,56 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
 		// engine specific
+		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x0, 0x0, 0x0, 0x00751997)
+		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x0, 0x0, 0x0, 0x007519A7)
 		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0062DE8E, 0x00653660, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
-		int text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
+		INT text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
+		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl = ZenDef(0x0, 0x0, 0x0, 0x006B0513)
+		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl_end = text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl + 5
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
+		INT field_oCAniCtrl_Human_npc = 0x12C
 		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
 		INT field_oCAniCtrl_Human_t_jumpuplow_2_stand = 0xA10
+		INT field_zCModelAniActive_isFadingOut = 0x1C
 		
+		INT func_oCAniCtrl_Human__Stand = ZenDef(0x0062DCF0, 0x006534C0, 0x0065AB00, 0x006B7490)
 		INT func_oCAniCtrl_Human_SetNextAni = ZenDef(0x0061B980, 0x0063F320, 0x00647720, 0x006A3FA0)
+		INT func_zCModel_IsStateActive = ZenDef(0x00563D30, 0x0057C5B0, 0x00578880, 0x0057DDA0)
+		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
 		// end of engine specific
 		
 		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
+		
+		#assembler [text_oCNpc_EV_AttackRun_mov_ecx__s_walk]
+			mov ecx, eax
+			call $func_oCAniCtrl_Human__Stand
+		#/assembler [text_oCNpc_EV_AttackRun_StartAni_end]
+		
+		#assembler [text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl]
+			push ecx
+			
+			mov eax, [esi+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			call $func_zCModel_GetActiveAni
+			
+			pop ecx
+			
+			test eax, eax
+			jz continue
+
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			jnz continue
+			
+			add esp, 8
+			jmp $text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl_end
+			
+		continue:
+			orgcode
+		#/assembler
 		
 		INT @text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = field_oCAniCtrl_Human_t_jumpuplow_2_stand
 		
