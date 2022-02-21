@@ -5,7 +5,9 @@
 // 1) oCAniCtrl_Human::IsStateAniActive - in BowMode (run to stand)
 // 2) oCAniCtrl_Human::IsWalking - attack-run instead of attack
 // 3) zCModel::StartAni - fading already faded animation instead of an active one
-// 4) oCAniCtrl_Human::PC_JumpForward - run-jump instead of stand-jump  
+// 4) oCAniCtrl_Human::PC_JumpForward - run-jump instead of stand-jump
+// 5) Tweak: stop the fading animation immedeatly if the same animation is requested to start
+// 6) zCModelNodeInst::CalcWeights - fading animation gets stopped if it has no weight at least in one node
 
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
@@ -13,15 +15,32 @@
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
 		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
 		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x00628CD0, 0x006554B0, 0x006B1E40)
+		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_1 = ZenDef(0x0056559B, 0x0057DF25, 0x0057A0FB, 0x0057F61B)
+		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_2 = ZenDef(0x005655DB, 0x0057DF75, 0x0057A13B, 0x0057F65B)
+		INT text_zCModel_AdvanceAnis_afterNodesBlending = ZenDef(0x00563817, 0x0057C062, 0x00578209, 0x0057D729)
 		INT text_zCModel_StartAni_mov_ecx_protoAni = ZenDef(0x00561537, 0x00561537, 0x00575DD6, 0x0057B2F6)
 		INT text_zCModel_StartAni_fail_cmp_layers = ZenDef(0x0056159D, 0x0056159D, 0x00575E3C, 0x0057B35C)
 		INT text_zCModel_StartAni_call_FadeOutAni = ZenDef(0x0056160C, 0x0056160C, 0x00575EAB, 0x0057B3CB)
+		INT text_zCModel_StartAni_call_FadeOutAni_end = text_zCModel_StartAni_call_FadeOutAni + 5
+		INT text_zCModel_StartAni_cmp_startMode_2 = ZenDef(0x00561508, 0x00579BDC, 0x00575D98, 0x0057B2B8)
+		INT text_zCModel_StartAni_cmp_startMode_2_end = text_zCModel_StartAni_cmp_startMode_2 + 18
 		
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
 		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C		
 		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zTNodeAni_modelAni = 0x0
+		INT field_zTNodeAni_weight = 0x4
+		INT field_zTNodeAni_blendState = 0xC
+		INT field_zCModelNodeInst_nodeAniList = 0xCC
+		INT field_zCModelNodeInst_numNodeAnis = 0x18C
+		INT field_zCModel_numActiveAnis = 0x34
+		INT field_zCModel_aniChannels = 0x38
+		INT field_zCModel_nodeList = ZenDef(0x64, 0x64, 0x70, 0x70)
+		INT field_zCModel_nodeList_numInArray = field_zCModel_nodeList + 8
 		INT field_zCAIPlayer_model = 0x68
+		
+		INT sizeof_zTNodeAni = 0x20
 		
 		INT func_oCAniCtrl_Human_IsWalking = ZenDef(0x006257E0, 0x0064A540, 0x00651860, 0x006AE0E0)
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
@@ -144,8 +163,133 @@
 			jne continue
 			
 			call $func_zCModel_StopAni
+			jmp $text_zCModel_StartAni_call_FadeOutAni_end
 		
 		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCModel_StartAni_cmp_startMode_2]
+			mov eax, [ebx+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			jz continue
+			
+			push ebx
+			mov ecx, esi
+			call $func_zCModel_StopAni
+			
+			mov ecx, [esi+$field_zCModel_numActiveAnis]
+			jmp $text_zCModel_StartAni_cmp_startMode_2_end
+		
+		continue:
+			orgcode
+		#/assembler
+		
+		// void zCModel::CheckFadeoutAnis()
+		#assembler [func_zCModel_CheckFadeoutAnis]
+			sub esp, 8 ; +8
+			mov eax, ecx
+			push ebp ; +12
+			xor ebp, ebp
+			mov [esp+4], eax
+			cmp [eax+$field_zCModel_numActiveAnis], ebp
+			jle return
+	
+			push ebx ; +16
+			push esi ; +20
+			lea ebx, [eax+$field_zCModel_aniChannels]
+			xorps xmm1, xmm1
+			push edi ; +24
+			mov [esp+20], ebx
+			
+		mainLoop:
+			mov esi, [ebx]
+			cmp dword ptr [esi+$field_zCModelAniActive_isFadingOut], 0
+			je continue
+			
+			xor edi, edi
+			cmp [eax+$field_zCModel_nodeList_numInArray], edi
+			jle innerLoopEnd
+			
+			mov ebx, [eax+$field_zCModel_nodeList]
+			
+		auxLoop:
+			mov eax, [ebx]
+			xor ecx, ecx
+			mov edx, [eax+$field_zCModelNodeInst_numNodeAnis]
+			test edx, edx
+			jle auxLoopEnd
+			
+			add eax, $field_zCModelNodeInst_nodeAniList
+			//add eax, 0xD8
+
+		checkFaded:
+			//cmp [eax-12], esi ; nodeAniList->modelAni
+			cmp [eax+$field_zTNodeAni_modelAni], esi
+			jne auxLoopContinue
+			
+			//cmp dword ptr [eax], 2 ; blendState
+			cmp dword ptr [eax+$field_zTNodeAni_blendState], 2
+			jne notFaded
+			
+			//movss xmm0, [eax-8] ; weight
+			movss xmm0, [eax+$field_zTNodeAni_weight]
+			comiss xmm0, xmm1
+			ja notFaded
+			
+		auxLoopContinue:
+			inc ecx
+			add eax, $sizeof_zTNodeAni
+			cmp ecx, edx
+			jl checkFaded
+			
+		auxLoopEnd:
+			mov eax, [esp+16]
+			inc edi
+			add ebx, 4
+			cmp edi, [eax+$field_zCModel_nodeList_numInArray]
+			jl auxLoop
+			
+			mov ebx, [esp+20]
+			
+		innerLoopEnd:
+			push esi ; +28
+			mov ecx, eax
+			call $func_zCModel_StopAni ; +24
+			dec ebp
+			xorps xmm1, xmm1
+			sub ebx, 4
+			jmp skipEbx
+			
+		notFaded:
+			mov ebx, [esp+20]
+			
+		skipEbx:
+			mov eax, [esp+16]
+			
+		continue:
+			inc ebp
+			add ebx, 4
+			mov [esp+20], ebx
+			cmp ebp, [eax+$field_zCModel_numActiveAnis]
+			jl mainLoop
+			
+			pop edi ; +20
+			pop esi ; +16
+			pop ebx ; +12
+			
+		return:
+			pop ebp ; +8
+			add esp, 8 ; +0
+			ret
+		#/assembler
+		
+		HEX @text_zCModelNodeInst_CalcWeights_jne_blendState_2_1 = 'EB'
+		HEX @text_zCModelNodeInst_CalcWeights_jne_blendState_2_2 = 'EB'
+		
+		#assembler [text_zCModel_AdvanceAnis_afterNodesBlending]
+			mov ecx, ebx
+			call $func_zCModel_CheckFadeoutAnis
 			orgcode
 		#/assembler
 	#/patch
