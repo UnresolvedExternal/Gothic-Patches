@@ -2,7 +2,7 @@
 // 
 // Also in EV_RemoveWeapon the stand animations are mistakenly tested so the animations
 // for moving may be mistakenly started while the character is standing. 
-// Occurs, for example, if you press '1' to remove weapon.
+// Occurs, for example, if you press '1' to remove a weapon.
 
 #engine [G2, G2A]
 	#patch [zRemoveWeaponFix]
