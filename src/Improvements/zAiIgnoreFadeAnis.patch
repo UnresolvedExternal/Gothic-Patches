@@ -303,7 +303,8 @@
 				je $text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl
 				
 			continue:
-				orgcode+4
+				//orgcode+4
+				inc ecx
 			#/assembler
 		ELSE
 			#assembler [text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl]
