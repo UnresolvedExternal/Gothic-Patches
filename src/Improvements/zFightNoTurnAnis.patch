@@ -13,7 +13,7 @@
 		INT stack_oCNpc_EV_DrawWeapon_model = 0x68 + 0x8 - 0x54
 		
 		IF engine_version == 2
-			stack_oCNpc_EV_DrawWeapon_model += 0x4
+			stack_oCNpc_EV_DrawWeapon_model = 0x68 + 0x8 - 0x50
 		END
 		
 		INT field_oCMsgWeapon_duringRun = 0x48
@@ -115,34 +115,98 @@
 		return:
 		#/assembler
 
-		#assembler [text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings]
-			test byte ptr [edi+$field_oCMsgWeapon_duringRun], 1
-			jz continue
-			
-			push ecx
-			
-			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
-			push eax
-			mov ecx, esi
-			call $func_zCModel_GetAniFromAniID
-			
-			push eax
-			mov ecx, esi
-			call $func_zCModel_IsAniActive
-			
-			pop ecx
-			
-			test eax, eax
-			jz continue
-			
-			call $func_oCAIHuman_PC_Turnings_no_ani
-			jmp return
-			
-		continue:
-			call $func_oCAIHuman_PC_Turnings
-			
-		return:
-		#/assembler
+		IF engine_version == 1
+			#assembler [text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings]
+				test byte ptr [edi+$field_oCMsgWeapon_duringRun], 1
+				jz continue
+				
+				push ecx
+				
+				mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+				push eax
+				mov ecx, ebx
+				call $func_zCModel_GetAniFromAniID
+				
+				push eax
+				mov ecx, ebx
+				call $func_zCModel_IsAniActive
+				
+				pop ecx
+				
+				test eax, eax
+				jz continue
+				
+				call $func_oCAIHuman_PC_Turnings_no_ani
+				jmp return
+				
+			continue:
+				call $func_oCAIHuman_PC_Turnings
+				
+			return:
+			#/assembler
+		END
+		
+		IF engine_version == 2
+			#assembler [text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings]
+				test byte ptr [edi+$field_oCMsgWeapon_duringRun], 1
+				jz continue
+				
+				push ecx
+				
+				mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+				push eax
+				mov ecx, ebp
+				call $func_zCModel_GetAniFromAniID
+				
+				push eax
+				mov ecx, ebp
+				call $func_zCModel_IsAniActive
+				
+				pop ecx
+				
+				test eax, eax
+				jz continue
+				
+				call $func_oCAIHuman_PC_Turnings_no_ani
+				jmp return
+				
+			continue:
+				call $func_oCAIHuman_PC_Turnings
+				
+			return:
+			#/assembler
+		END
+		
+		IF engine_version >= 3
+			#assembler [text_oCNpc_EV_RemoveWeapon_call_human_ai_PC_Turnings]
+				test byte ptr [edi+$field_oCMsgWeapon_duringRun], 1
+				jz continue
+				
+				push ecx
+				
+				mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+				push eax
+				mov ecx, esi
+				call $func_zCModel_GetAniFromAniID
+				
+				push eax
+				mov ecx, esi
+				call $func_zCModel_IsAniActive
+				
+				pop ecx
+				
+				test eax, eax
+				jz continue
+				
+				call $func_oCAIHuman_PC_Turnings_no_ani
+				jmp return
+				
+			continue:
+				call $func_oCAIHuman_PC_Turnings
+				
+			return:
+			#/assembler
+		END
 		
 		// allow turning in stand-remove-weapon
 		#assembler [text_oCNpc_EV_RemoveWeapon1_call_anictrl_RemoveWeapon1]
