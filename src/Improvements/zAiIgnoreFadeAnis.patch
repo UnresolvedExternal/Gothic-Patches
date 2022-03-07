@@ -15,15 +15,15 @@
 		// engine specific
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
 		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
-		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x00628CD0, 0x006554B0, 0x006B1E40)
-		INT text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl = ZenDef(0x006535FE, 0x006535FE, 0x0065AC39, 0x006B75C9)
-		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0065364A, 0x0065364A, 0x0065AC88, 0x006B7618)
+		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x0064DF02, 0x006554B0, 0x006B1E40)
+		INT text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl = ZenDef(0x0062DE29, 0x006535FE, 0x0065AC39, 0x006B75C9)
+		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0062DE78, 0x0065364A, 0x0065AC88, 0x006B7618)
 		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_1 = ZenDef(0x0056559B, 0x0057DF25, 0x0057A0FB, 0x0057F61B)
 		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_2 = ZenDef(0x005655DB, 0x0057DF75, 0x0057A13B, 0x0057F65B)
 		INT text_zCModel_AdvanceAnis_afterNodesBlending = ZenDef(0x00563817, 0x0057C062, 0x00578209, 0x0057D729)
-		INT text_zCModel_StartAni_mov_ecx_protoAni = ZenDef(0x00561537, 0x00561537, 0x00575DD6, 0x0057B2F6)
-		INT text_zCModel_StartAni_fail_cmp_layers = ZenDef(0x0056159D, 0x0056159D, 0x00575E3C, 0x0057B35C)
-		INT text_zCModel_StartAni_call_FadeOutAni = ZenDef(0x0056160C, 0x0056160C, 0x00575EAB, 0x0057B3CB)
+		INT text_zCModel_StartAni_mov_ecx_protoAni = ZenDef(0x00561537, 0x00579C0B, 0x00575DD6, 0x0057B2F6)
+		INT text_zCModel_StartAni_fail_cmp_layers = ZenDef(0x0056159D, 0x00579C7C, 0x00575E3C, 0x0057B35C)
+		INT text_zCModel_StartAni_call_FadeOutAni = ZenDef(0x0056160C, 0x00579CEF, 0x00575EAB, 0x0057B3CB)
 		INT text_zCModel_StartAni_call_FadeOutAni_end = text_zCModel_StartAni_call_FadeOutAni + 5
 		INT text_zCModel_StartAni_cmp_startMode_2 = ZenDef(0x00561508, 0x00579BDC, 0x00575D98, 0x0057B2B8)
 		INT text_zCModel_StartAni_cmp_startMode_2_end = text_zCModel_StartAni_cmp_startMode_2 + 18
@@ -294,7 +294,7 @@
 			orgcode
 		#/assembler
 		
-		IF engine_version <= 2
+		IF engine_version == 2
 			#assembler [text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl]
 				cmp [edi], eax
 				jne continue
