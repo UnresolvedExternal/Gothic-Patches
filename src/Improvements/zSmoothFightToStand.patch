@@ -10,15 +10,17 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
 		// engine specific
-		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x0, 0x0, 0x0, 0x00751997)
-		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x0, 0x0, 0x0, 0x007519A7)
+		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x006AC0C1, 0x006DEF01, 0x006F2BB7, 0x00751997)
+		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x006AC0D1, 0x006DEF11, 0x006F2BC7, 0x007519A7)
+		INT text_oCNpc_EV_AttackFinish_call_GetModel_StartAni = ZenDef(0x006AC4CD, 0x006DF3A7, 0x006F307A, 0x00751E58)
 		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0062DE8E, 0x00653660, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
-		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl = ZenDef(0x0, 0x0, 0x0, 0x006B0513)
+		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl = ZenDef(0x00627978, 0x0064C9F8, 0x00653BDB, 0x006B0513)
 		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl_end = text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl + 5
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
+		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
 		INT field_oCAniCtrl_Human_npc = 0x12C
 		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
@@ -59,6 +61,22 @@
 			
 		continue:
 			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_AttackFinish_call_GetModel_StartAni]
+			mov eax, [esp]
+			push 0
+			push eax
+			orgcode
+			
+			pop eax
+			add esp, 4
+			
+			mov ecx, [esi+$field_oCNpc_human_ai]
+			mov edx, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push edx
+			push eax
+			call $func_oCAniCtrl_Human_SetNextAni
 		#/assembler
 		
 		INT @text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = field_oCAniCtrl_Human_t_jumpuplow_2_stand
