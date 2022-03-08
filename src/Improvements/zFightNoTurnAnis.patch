@@ -238,7 +238,7 @@
 				pop ecx
 				
 				test eax, eax
-				jz return
+				jz pop_zero
 				
 				push ecx
 				
@@ -257,6 +257,10 @@
 				jz continue
 				
 				call $func_oCAIHuman_PC_Turnings_no_ani
+				jmp return
+				
+			pop_zero:
+				add esp, 4
 				jmp return
 				
 			continue:
