@@ -10,6 +10,8 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zSmoothFightToStand]
 		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
 		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x006AC0C1, 0x006DEF01, 0x006F2BB7, 0x00751997)
 		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x006AC0D1, 0x006DEF11, 0x006F2BC7, 0x007519A7)
 		INT text_oCNpc_EV_AttackFinish_call_GetModel_StartAni = ZenDef(0x006AC4CD, 0x006DF3A7, 0x006F307A, 0x00751E58)
@@ -18,22 +20,121 @@
 		INT text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
 		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl = ZenDef(0x00627978, 0x0064C9F8, 0x00653BDB, 0x006B0513)
 		INT text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl_end = text_oCAniCtrl_Human_HitCombo_call_GetModel_StartAni__s_walkl + 5
+		INT text_oCAniCtrl_Human_SearchStandAni_ANI_ACTION_WATERWALK = ZenDef(0x0061CA0C, 0x006404B8, 0x006487AC, 0x006A502C) + 1
+		INT text_oCAniCtrl_Human_SearchStandAni_main_if = /*0x006A4E83*/ZenDef(0x0061C85D, 0x00640313, 0x006485FD, 0x006A4E7D)
+		INT text_oCAniCtrl_Human_SearchStandAni_main_if_end = ZenDef(0x0061C98B, 0x00640438, 0x0064872B, 0x006A4FAB)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x00613052, 0x00636383, 0x0063CE62, 0x006996B2)
 		
 		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
+		INT field_oCAniCtrl_Human_s_walk = 0x698
+		INT field_oCAniCtrl_Human_s_sneak = 0xA20
+		INT field_oCAniCtrl_Human_walkmode = 0x160
 		INT field_oCAniCtrl_Human_npc = 0x12C
 		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
 		INT field_oCAniCtrl_Human_t_jumpuplow_2_stand = 0xA10
 		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zCAIPlayer_model = 0x68
 		
+		INT func_oCNpc_GetWeaponMode = ZenDef(0x00695820, 0x006C7230, 0x006DA500, 0x00738C40)
 		INT func_oCAniCtrl_Human__Stand = ZenDef(0x0062DCF0, 0x006534C0, 0x0065AB00, 0x006B7490)
 		INT func_oCAniCtrl_Human_SetNextAni = ZenDef(0x0061B980, 0x0063F320, 0x00647720, 0x006A3FA0)
+		INT func_oCAniCtrl_Human_SetWalkMode = ZenDef(0x006211E0, 0x00645750, 0x0064CFA0, 0x006A9820)
 		INT func_zCModel_IsStateActive = ZenDef(0x00563D30, 0x0057C5B0, 0x00578880, 0x0057DDA0)
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
+		INT func_zCModel_GetAniFromAniID = ZenDef(0x0046D1E0, 0x00475680, 0x00471E30, 0x00472F50)
 		// end of engine specific
 		
 		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
+		
+		HEX @text_oCAniCtrl_Human_SearchStandAni_ANI_ACTION_WATERWALK = '03'
+		
+		#assembler [func_oCAniCtrl_Human_TrySetWalkMode]
+			push esi
+			push edi
+			
+			mov esi, ecx
+			
+			mov eax, [esi+$field_oCAniCtrl_Human_walkmode]
+			test eax, eax
+			jz return
+			
+			mov edi, eax
+			
+			mov ecx, [esi+$field_oCAniCtrl_Human_npc]
+			call $func_oCNpc_GetWeaponMode
+			lea edx, [eax*4]
+			add edx, esi
+			xor eax, eax
+
+			cmp edi, 1
+			je set_walkmode_walk
+			
+			cmp edi, 2
+			je set_walkmode_sneak
+			
+			jmp return
+			
+		set_walkmode_walk:
+			add edx, $field_oCAniCtrl_Human_s_walk
+			jmp set_walkmode
+			
+		set_walkmode_sneak:
+			add edx, $field_oCAniCtrl_Human_s_sneak
+			
+		set_walkmode:
+			mov edx, [edx]
+			test edx, edx
+			jle return
+			
+			push edx
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetAniFromAniID
+			
+			test eax, eax
+			jz return
+			
+			// test aniType == zMDL_ANI_TYPE_DISABLED
+			mov eax, [eax+0x0DC]
+			and eax, 0x3F
+			cmp al, 0x6
+			mov eax, 0
+			je return
+			
+			push edi
+			mov ecx, esi
+			call $func_oCAniCtrl_Human_SetWalkMode
+			mov eax, 1
+			
+		return:
+			pop edi
+			pop esi
+			ret
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human_SearchStandAni_main_if]
+			push eax
+			push ecx
+			push edx
+			
+			mov ecx, dword ptr [$engine_version]
+			cmp ecx, 2
+			mov ecx, ebp
+			je process_call
+			
+			mov ecx, esi
+			
+		process_call:
+			call $func_oCAniCtrl_Human_TrySetWalkMode
+			test eax, eax
+			
+			pop edx
+			pop ecx
+			pop eax			
+			jnz $text_oCAniCtrl_Human_SearchStandAni_main_if_end
+			
+			orgcode
+		#/assembler
 		
 		#assembler [text_oCNpc_EV_AttackRun_mov_ecx__s_walk]
 			mov ecx, eax
