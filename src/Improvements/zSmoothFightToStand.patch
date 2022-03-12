@@ -48,7 +48,7 @@
 		MemSet(text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode, '90', 2)
 		
 		HEX @text_oCAniCtrl_Human_SearchStandAni_ANI_ACTION_WATERWALK = '03'
-		
+	
 		#assembler [func_oCAniCtrl_Human_TrySetWalkMode]
 			push esi
 			push edi
