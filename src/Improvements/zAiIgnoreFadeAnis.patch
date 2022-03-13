@@ -13,6 +13,8 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
+		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
+		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
 		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
 		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x0064DF02, 0x006554B0, 0x006B1E40)
@@ -20,6 +22,8 @@
 		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0062DE78, 0x0065364A, 0x0065AC88, 0x006B7618)
 		INT text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni = ZenDef(0x006229E8, 0x00647198, 0x0064E878, 0x006AB0F8)
 		INT text_oCAniCtrl_Human_CorrectAniStates_continue_search = text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni + 7
+		INT text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID = ZenDef(0x006294CA, 0x0064E73A, 0x00655CAA, 0x006B263A)
+		INT text_oCAniCtrl_Human_DrawWeapon1_test_eax_eax = ZenDef(0x006294D7, 0x0064E747, 0x00655CB7, 0x006B2647)
 		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_1 = ZenDef(0x0056559B, 0x0057DF25, 0x0057A0FB, 0x0057F61B)
 		INT text_zCModelNodeInst_CalcWeights_jne_blendState_2_2 = ZenDef(0x005655DB, 0x0057DF75, 0x0057A13B, 0x0057F65B)
 		INT text_zCModel_AdvanceAnis_afterNodesBlending = ZenDef(0x00563817, 0x0057C062, 0x00578209, 0x0057D729)
@@ -30,6 +34,7 @@
 		INT text_zCModel_StartAni_cmp_startMode_2 = ZenDef(0x00561508, 0x00579BDC, 0x00575D98, 0x0057B2B8)
 		INT text_zCModel_StartAni_cmp_startMode_2_end = text_zCModel_StartAni_cmp_startMode_2 + 18
 		
+		INT field_oCAniCtrl_Human__t_walk_2_aim = 0x10E8
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
 		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C		
@@ -47,9 +52,14 @@
 		
 		INT sizeof_zTNodeAni = 0x20
 		
+		INT func_oCAIHuman_Pressed = ZenDef(0x0060F920, 0x006323C0, 0x00638E70, 0x00695540)
 		INT func_oCAniCtrl_Human_IsWalking = ZenDef(0x006257E0, 0x0064A540, 0x00651860, 0x006AE0E0)
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
 		INT func_zCModel_StopAni = ZenDef(0x00560EE0, 0x00579370, 0x00575790, 0x0057ACB0)
+		
+		INT const_GAME_ACTION = 5
+		INT const_GAME_UP = 3
+		INT const_GAME_DOWN = 4
 		
 		INT engine_version = ZenDef(1, 2, 3, 4)
 		// end of engine specific
@@ -104,6 +114,66 @@
 			pop esi
 			ret 4
 		#/assembler
+		
+		#assembler [text_oCAIHuman_BowMode_call_IsStanding_G1]
+			push ecx
+			orgcode
+			pop ecx
+			
+			test eax, eax
+			jnz return
+			
+			mov eax, [ecx+$field_oCAniCtrl_Human__t_walk_2_aim]
+			push eax
+			mov ecx, [ecx+$field_zCAIPlayer_model]
+			call $func_zCModel_IsAniNotFading
+			
+		return:
+		#/assembler
+		
+		IF engine_version >= 3
+			#assembler [text_oCAIHuman_BowMode_call_IsStanding_G2]
+				orgcode
+				
+				test eax, eax
+				jnz check_keys
+				
+				mov eax, [esi+$field_oCAniCtrl_Human__t_walk_2_aim]
+				push eax
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_IsAniNotFading
+				jmp return
+				
+			check_keys:
+				push $const_GAME_ACTION
+				mov ecx, esi
+				call $func_oCAIHuman_Pressed
+				test eax, eax
+				jnz return
+				
+				push $const_GAME_UP
+				mov ecx, esi
+				call $func_oCAIHuman_Pressed
+				test eax, eax
+				jnz return_false
+				
+				push $const_GAME_DOWN
+				mov ecx, esi
+				call $func_oCAIHuman_Pressed
+				test eax, eax
+				mov eax, 1
+				jz return
+				
+			return_false:
+				xor eax, eax
+			
+			return:
+			#/assembler
+		END
+		
+		#assembler [text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID]
+			call $func_zCModel_IsAniNotFading
+		#/assembler [text_oCAniCtrl_Human_DrawWeapon1_test_eax_eax]
 		
 		// int oCAniCtrl_Human::HookIsWalking()
 		#assembler [func_oCAniCtrl_Human_HookIsWalking]
