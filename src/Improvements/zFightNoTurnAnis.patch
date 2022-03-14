@@ -19,27 +19,15 @@
 		END
 		
 		INT field_oCMsgWeapon_duringRun = ZenDef(0x48, 0x50, 0x48, 0x48)
-		INT field_oCAniCtrl_Human_npc = 0x12C
 		INT field_oCAniCtrl_Human__t_turnl = 0x1028
 		INT field_oCAniCtrl_Human__t_turnr = 0x102C
 		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
-		INT field_zCVob_eventManager = ZenDef(0xDC, 0xDC, 0xFC, 0xFC)
-		INT field_zCEventMessage_subType = 0x24
-		INT field_zCEventManager_messageList_parray = 0x30
-		INT field_zCEventManager_messageList_numinarray = 0x38
 		
 		INT func_oCNpc_IsSelfPlayer = ZenDef(0x0069E9E0, 0x006D0D80, 0x006E3BA0, 0x007425B0)
 		INT func_oCAIHuman_PC_Turnings = ZenDef(0x00614800, 0x00637660, 0x0063E0F0, 0x0069A940)
 		INT func_zCModel_GetAniFromAniID = ZenDef(0x0046D1E0, 0x00475680, 0x00471E30, 0x00472F50)
 		INT func_zCModel_IsAniActive = ZenDef(0x0046D220, 0x004756D0, 0x00471E70, 0x00472F90)
-		
-		INT vtable_oCMsgAttack = ZenDef(0x007DE42C, 0x008213FC, 0x0082EB74, 0x0083DC4C)
-		
-		INT vfunc_oCMsgAttack_IsDeleted = ZenDef(40, 40, 44, 44)
-		INT vfunc_oCMsgAttack_IsInUse = ZenDef(92, 92, 96, 96)
-		
-		INT const_oCMsgAttack_EV_ATTACKRUN = 3
 		// end of engine specific
 		
 		// void oCAIHuman::PC_Turnings_no_ani(int)
@@ -241,81 +229,7 @@
 		#/assembler
 
 		IF engine_version == 1
-			#assembler [func_zCVob_IsInAttackRun]
-				mov ecx, [ecx+$field_zCVob_eventManager]
-				xor eax, eax
-				test ecx, ecx
-				jz return
-				
-				push esi
-				push edi
-				
-				mov esi, [ecx+$field_zCEventManager_messageList_parray]
-				sub esi, 4
-				
-				mov edi, [ecx+$field_zCEventManager_messageList_numinarray]
-				inc edi
-				
-			loop:
-				add esi, 4
-				dec edi
-				jz epilogue_false
-
-				mov ecx, [esi]
-				test ecx, ecx
-				jz loop
-				
-				mov edx, [ecx]
-				cmp edx, $vtable_oCMsgAttack
-				jne loop
-				
-				mov eax, [ecx+$field_zCEventMessage_subType]
-				and eax, 0xFFFF
-				cmp eax, $const_oCMsgAttack_EV_ATTACKRUN
-				jne loop
-				
-				call dword ptr [edx+$vfunc_oCMsgAttack_IsDeleted]
-				test eax, eax
-				jnz loop
-				
-				mov ecx, [esi]
-				mov edx, [ecx]
-				call dword [edx+$vfunc_oCMsgAttack_IsInUse]
-				test eax, eax
-				jz loop
-				
-			epilogue_true:
-				mov eax, 1
-				jmp epilogue
-			
-			epilogue_false:
-				xor eax, eax
-				
-			epilogue:
-				pop edi
-				pop esi
-				
-			return:
-				ret
-			#/assembler
-			
-			#assembler [text_G1_patch_Turn_Attack_on_Run_call_oCAIHuman_PC_Turnings]
-				push ecx
-				mov ecx, [ecx+$field_oCAniCtrl_Human_npc]
-				call $func_zCVob_IsInAttackRun
-				pop ecx
-				
-				test eax, eax
-				jz use_anis
-				
-				call $func_oCAIHuman_PC_Turnings_no_ani
-				jmp return
-			
-			use_anis:
-				call $func_oCAIHuman_PC_Turnings
-				
-			return:
-			#/assembler
+			CALL(text_G1_patch_Turn_Attack_on_Run_call_oCAIHuman_PC_Turnings, func_oCAIHuman_PC_Turnings_no_ani)
 		END
 		
 		IF engine_version == 2
