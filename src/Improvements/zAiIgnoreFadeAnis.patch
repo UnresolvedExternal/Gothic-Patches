@@ -13,6 +13,7 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
+		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
@@ -63,6 +64,8 @@
 		
 		INT engine_version = ZenDef(1, 2, 3, 4)
 		// end of engine specific
+		
+		HEX @text_oCNpc_SetWeaponMode2_jz_standing = 'EB'
 		
 		#assembler [text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni]
 			cmp dword ptr [esi+$field_zCModelAniActive_isFadingOut], 0
