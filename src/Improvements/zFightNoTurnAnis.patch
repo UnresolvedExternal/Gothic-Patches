@@ -44,7 +44,8 @@
 		
 			push ecx
 			
-			push dword ptr [esp+8]
+			mov eax, [esp+16]
+			push eax
 			call $func_oCAIHuman_PC_Turnings
 		
 			pop ecx
