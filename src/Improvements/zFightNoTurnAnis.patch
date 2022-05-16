@@ -11,6 +11,7 @@
 		INT text_G1A_oCNpc_EV_AttackRun_call_anictrl_HitCombo = 0x006DEECE
 		INT text_oCAIHuman_FightMelee_jnz_npc_GetFocusVob = ZenDef(0x00611110, 0x00633E74, 0x0063A6DF, 0x00696F6F)
 		INT text_G1_patch_Turn_Attack_on_Run_call_oCAIHuman_PC_Turnings = 0x00737A87
+		INT text_oCNpc_EV_TakeVob_call_model_StartAni = ZenDef(0x006ADC21, 0x006E13CC, 0x006F48B1, 0x007536ED)
 		
 		INT stack_oCNpc_EV_DrawWeapon_model = 0x68 + 0x8 - 0x54
 		
@@ -26,9 +27,26 @@
 		
 		INT func_oCNpc_IsSelfPlayer = ZenDef(0x0069E9E0, 0x006D0D80, 0x006E3BA0, 0x007425B0)
 		INT func_oCAIHuman_PC_Turnings = ZenDef(0x00614800, 0x00637660, 0x0063E0F0, 0x0069A940)
+		INT func_oCAniCtrl_Human_StopTurnAnis = ZenDef(0x00625A20, 0x0064A7C0, 0x00651CB0, 0x006AE530)
 		INT func_zCModel_GetAniFromAniID = ZenDef(0x0046D1E0, 0x00475680, 0x00471E30, 0x00472F50)
 		INT func_zCModel_IsAniActive = ZenDef(0x0046D220, 0x004756D0, 0x00471E70, 0x00472F90)
 		// end of engine specific
+		
+		#assembler [text_oCNpc_EV_TakeVob_call_model_StartAni]
+			orgcode
+			
+			cmp dword ptr [$engine_version], 4
+			je g2a
+			
+			mov ecx, [esi+$field_oCNpc_human_ai]
+			jmp continue
+			
+		g2a:
+			mov ecx, [ebx+$field_oCNpc_human_ai]
+			
+		continue:
+			call $func_oCAniCtrl_Human_StopTurnAnis
+		#/assembler
 		
 		// void oCAIHuman::PC_Turnings_no_ani(int)
 		#assembler [func_oCAIHuman_PC_Turnings_no_ani]
