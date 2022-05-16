@@ -173,7 +173,23 @@
 			pop eax
 			add esp, 4
 			
+			cmp dword ptr [$engine_version], 1
+			je g1
+			
+			cmp dword ptr [$engine_version], 2
+			je g1a
+			
 			mov ecx, [esi+$field_oCNpc_human_ai]
+			jmp continue
+			
+		g1:
+			mov ecx, [edi+$field_oCNpc_human_ai]
+			jmp continue
+			
+		g1a:
+			mov ecx, [ebx+$field_oCNpc_human_ai]
+			
+		continue:
 			mov edx, [ecx+$field_oCAniCtrl_Human__s_walk]
 			push edx
 			push eax
