@@ -1,0 +1,28 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zAlwaysSetFightAnis]
+		// engine specific
+		INT text_oCAniCtrl_Human_InitAnimations_call_InitAllAnis = ZenDef(0x0061C6D5, 0x0064016F, 0x00648475, 0x006A4CF5)
+		
+		INT field_oCAniCtrl_Human_npc = 0x12C
+		
+		INT func_oCNpc_GetWeaponMode = ZenDef(0x00695820, 0x006C7230, 0x006DA500, 0x00738C40)
+		INT func_oCAniCtrl_Human_SetFightAnis = ZenDef(0x00622400, 0x00646AF0, 0x0064E1C0, 0x006AAA40)
+		// end of engine specific
+		
+		#assembler [text_oCAniCtrl_Human_InitAnimations_call_InitAllAnis]
+			orgcode
+			
+			mov ecx, [esi+$field_oCAniCtrl_Human_npc]
+			test ecx, ecx
+			jz return
+			
+			call $func_oCNpc_GetWeaponMode
+			
+			push eax
+			mov ecx, esi
+			call $func_oCAniCtrl_Human_SetFightAnis
+			
+		return:
+		#/assembler
+	#/patch
+#/engine
