@@ -1,0 +1,19 @@
+#engine [G1, G1A, G2, G2A]
+    #patch [zTrafoInWaterFix]
+        // engine specific
+        INT asm_start = ZenDef(0x004FEE84, 0x00512316, 0x0050BC44, 0x0050E9F4)
+        INT asm_away = ZenDef(0x004FF788, 0x00512CA8, 0x0050C4B2, 0x0050F268)
+ 
+        INT field_zCVob_homeWorld = ZenDef(0xA8, 0xA8, 0xB8, 0xB8)
+        // end of engine specific
+ 
+        #assembler [asm_start]
+            push ecx
+            mov ecx, [ecx+$field_zCVob_homeWorld]
+            test ecx, ecx
+            pop ecx
+            jz $asm_away
+            orgcode
+        #/assembler
+    #/patch
+#/engine

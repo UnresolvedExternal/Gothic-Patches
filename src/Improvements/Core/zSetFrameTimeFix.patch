@@ -1,0 +1,16 @@
+#engine [G1, G1A, G2, G2A]
+    #patch [zSetFrameTimeFix]
+        // engine specific
+        INT text_zCTimer_SetFrameTime_pop_esi = ZenDef(0x005CE669, 0x005ED409, 0x005F2A6F, 0x005F985F)
+        
+        INT field_zCTimer_frameTimeFloat = 0x4
+        INT field_zCTimer_frameTime = ZenDef(0x10, 0x10, 0x18, 0x18)
+        // end of engine specific
+        
+        #assembler [text_zCTimer_SetFrameTime_pop_esi]
+            fld dword ptr [esi+$field_zCTimer_frameTimeFloat]
+            fistp dword ptr [esi+$field_zCTimer_frameTime]
+            orgcode
+        #/assembler
+    #/patch
+#/engine

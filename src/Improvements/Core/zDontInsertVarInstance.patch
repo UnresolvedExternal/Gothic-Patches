@@ -1,0 +1,32 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zDontInsertVarInstance]
+		// engine specific
+		INT text_zCParser_AutoCompletion_instance_check_success = ZenDef(0x006EB4B5, 0x00724735, 0x00734F85, 0x007949B4)
+		INT text_zCParser_AutoCompletion_instance_check_fail = ZenDef(0x006EB4EC, 0x00724770, 0x00734FBC, 0x007949FC)
+		INT text_Game_CreateInstance_instance_check_success = ZenDef(0x00640BD7, 0x00667CA7, 0x0066EA97, 0x006CB817)
+		INT text_Game_CreateInstance_instance_check_fail = ZenDef(0x00640FC1, 0x00668103, 0x0066EE84, 0x006CBC04)
+		
+		INT field_zCPar_Symbol_flags = 0x22
+		
+		INT const_zPAR_FLAG_CONST = 1
+		// end of engine specific
+		
+		#assembler [text_zCParser_AutoCompletion_instance_check_success]
+			mov ecx, [esi+$field_zCPar_Symbol_flags]
+			and ecx, $const_zPAR_FLAG_CONST
+			test ecx, ecx
+			jz $text_zCParser_AutoCompletion_instance_check_fail
+			
+			orgcode
+		#/assembler
+		
+		#assembler [text_Game_CreateInstance_instance_check_success]
+			mov ecx, [eax+$field_zCPar_Symbol_flags]
+			and ecx, $const_zPAR_FLAG_CONST
+			test ecx, ecx
+			jz $text_Game_CreateInstance_instance_check_fail
+			
+			orgcode
+		#/assembler
+	#/patch
+#/engine
