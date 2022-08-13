@@ -14,8 +14,16 @@
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
 		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
+		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
+		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
+		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1 = ZenDef(0x0062E1A1, 0x006539A1, 0x0065AFB1, 0x006B7941)
+		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_2 = ZenDef(0x0062E215, 0x00653A15, 0x0065B025, 0x006B79B5)
+		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_3 = ZenDef(0x0062E280, 0x00653A80, 0x0065B090, 0x006B7A20)
+		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_4 = ZenDef(0x0062E2BA, 0x00653AC0, 0x0065B0CA, 0x006B7A5A)
+		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_5 = ZenDef(0x0062E326, 0x00653B2C, 0x0065B136, 0x006B7AC6)
+		INT text_oCAniCtrl_Human__Forward_call_model_IsAniActive = ZenDef(0x0062E3BC, 0x00653BC9, 0x0065B1CC, 0x006B7B5C)
 		INT text_oCAniCtrl_Human_IsStateAniActive_cmp_layer = ZenDef(0x006255AC, 0x0064A2DC, 0x0065162C, 0x006ADEAC)
 		INT text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer = ZenDef(0x006255BB, 0x0064A2EB, 0x0065163B, 0x006ADEBB)
 		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x0064DF02, 0x006554B0, 0x006B1E40)
@@ -47,6 +55,7 @@
 		INT field_zCModelNodeInst_numNodeAnis = 0x18C
 		INT field_zCModel_numActiveAnis = 0x34
 		INT field_zCModel_aniChannels = 0x38
+		INT field_zCModelAni_aniID = 0x4C
 		INT field_zCModel_nodeList = ZenDef(0x64, 0x64, 0x70, 0x70)
 		INT field_zCModel_nodeList_numInArray = field_zCModel_nodeList + 8
 		INT field_zCAIPlayer_model = 0x68
@@ -86,8 +95,8 @@
 			jnz $text_oCAniCtrl_Human_IsStateAniActive_fail_cmp_layer
 		#/assembler
 		
-		// int zCModel::IsAniNotFading(int)
-		#assembler [func_zCModel_IsAniNotFading]			
+		// zCModelAniActive* zCModel::GetNotFadingAni(int)
+		#assembler [func_zCModel_GetNotFadingAni]			
 			mov edx, [esp+4]
 			
 			push esi
@@ -102,12 +111,9 @@
 			test eax, eax
 			jz return
 			
-			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
-			test eax, eax
-			jnz fail
-			
-			mov eax, 1
-			jmp return
+			mov edx, [eax+$field_zCModelAniActive_isFadingOut]
+			test edx, edx
+			jz return
 			
 		fail:
 			xor eax, eax
@@ -129,7 +135,7 @@
 			mov eax, [ecx+$field_oCAniCtrl_Human__t_walk_2_aim]
 			push eax
 			mov ecx, [ecx+$field_zCAIPlayer_model]
-			call $func_zCModel_IsAniNotFading
+			call $func_zCModel_GetNotFadingAni
 			
 		return:
 		#/assembler
@@ -144,7 +150,7 @@
 				mov eax, [esi+$field_oCAniCtrl_Human__t_walk_2_aim]
 				push eax
 				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_IsAniNotFading
+				call $func_zCModel_GetNotFadingAni
 				jmp return
 				
 			check_keys:
@@ -175,7 +181,7 @@
 		END
 		
 		#assembler [text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID]
-			call $func_zCModel_IsAniNotFading
+			call $func_zCModel_GetNotFadingAni
 		#/assembler [text_oCAniCtrl_Human_DrawWeapon1_test_eax_eax]
 		
 		// int oCAniCtrl_Human::HookIsWalking()
@@ -200,7 +206,7 @@
 			
 		check:
 			mov ecx, edi
-			call $func_zCModel_IsAniNotFading
+			call $func_zCModel_GetNotFadingAni
 			
 			test eax, eax
 			jnz return
@@ -228,7 +234,7 @@
 			add esp, 4
 			mov eax, [esi+$field_oCAniCtrl_Human__s_walkl]
 			push eax
-			call $func_zCModel_IsAniNotFading
+			call $func_zCModel_GetNotFadingAni
 		#/assembler
 		
 		#assembler [text_zCModel_StartAni_mov_ecx_protoAni]
@@ -399,5 +405,59 @@
 			continue:
 			#/assembler
 		END
+		
+		#assembler [func_zCModel_GetNotFadingProtoAni]
+			mov eax, [esp+4]
+			push eax
+			call $func_zCModel_GetNotFadingAni
+			
+			test eax, eax
+			jz return
+			
+			mov eax, [eax]
+			
+		return:
+			ret 4
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_2]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_3]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_4]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_5]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCAniCtrl_Human__Forward_call_model_IsAniActive]
+			pop eax
+			test eax, eax
+			jz return
+			
+			mov eax, [eax+$field_zCModelAni_aniID]
+			push eax
+			call $func_zCModel_GetNotFadingAni
+			
+		return:
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2]
+			call $func_zCModel_GetNotFadingProtoAni
+		#/assembler
 	#/patch
 #/engine
