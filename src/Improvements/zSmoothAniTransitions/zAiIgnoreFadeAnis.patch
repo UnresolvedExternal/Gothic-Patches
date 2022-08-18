@@ -16,8 +16,41 @@
 		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
+		
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1 = 0x0061077D
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1 = 0x006109F3
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1 = 0x00610A40
+		
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1A = 0x00633475
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A = 0x006336CD
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__t_hitback_G1_G1A = 0x00633731
+		
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G2 = 0x00639935
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_hitf_G1_G2 = 0x00639B4D
+		INT text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2 = 0x00639BBB
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2 = 0x00639CEF
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2 = 0x00639FA1
+		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G2_G2 = 0x0063A001
+		
+		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_aim_G1_G2A = 0x006960D0
+		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_hitf_G1_G2A = 0x00696100
+		INT text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2A = 0x00696332
+		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2A = 0x0069655C
+		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A = 0x00696840
+		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__t_hitback_G2_G2A = 0x00696890
+		
+		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G1 = ZenDef(0x006108FB, 0x006335FA, 0x00639AB7, 0x006962B5)
+		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2 = ZenDef(0x00000000, 0x00000000, 0x00639E9A, 0x00696707)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
+		INT text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 = ZenDef(0x00628485, 0x0064D585, 0x00000000, 0x00000000)
+		INT text_oCAniCtrl_Human_IsParadeRunning_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
+		INT text_oCAniCtrl_Human_CanParade_cmp_layer_G1 = ZenDef(0x006284E8, 0x0064D5E8, 0x00000000, 0x00000000)
+		INT text_oCAniCtrl_Human_CanParade_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
+		INT text_oCAniCtrl_Human_IsParadeRunning_ani_check_success_G2 = ZenDef(0x00000000, 0x00000000, 0x00654BDE, 0x006B156E)
+		INT text_oCAniCtrl_Human_IsParadeRunning_ani_check_fail_G2 = ZenDef(0x00000000, 0x00000000, 0x00654BF5, 0x006B1585)
+		INT text_oCAniCtrl_Human_CanParade_ani_check_success_G2 = ZenDef(0x00000000, 0x00000000, 0x00654C49, 0x006B15D9)
+		INT text_oCAniCtrl_Human_CanParade_ani_check_fail_G2 = ZenDef(0x00000000, 0x00000000, 0x00654C60, 0x006B15F0)
 		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1 = ZenDef(0x0062E1A1, 0x006539A1, 0x0065AFB1, 0x006B7941)
 		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_2 = ZenDef(0x0062E215, 0x00653A15, 0x0065B025, 0x006B79B5)
 		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_3 = ZenDef(0x0062E280, 0x00653A80, 0x0065B090, 0x006B7A20)
@@ -29,6 +62,7 @@
 		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x0064DF02, 0x006554B0, 0x006B1E40)
 		INT text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl = ZenDef(0x0062DE29, 0x006535FE, 0x0065AC39, 0x006B75C9)
 		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0062DE78, 0x0065364A, 0x0065AC88, 0x006B7618)
+		INT text_oCAniCtrl_Human__Stand_call_IsAniActive__s_aim = ZenDef(0x0062E002, 0x006537F9, 0x0065AE12, 0x006B77A2)
 		INT text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni = ZenDef(0x006229E8, 0x00647198, 0x0064E878, 0x006AB0F8)
 		INT text_oCAniCtrl_Human_CorrectAniStates_continue_search = text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni + 7
 		INT text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID = ZenDef(0x006294CA, 0x0064E73A, 0x00655CAA, 0x006B263A)
@@ -121,6 +155,20 @@
 		return:
 			pop edi
 			pop esi
+			ret 4
+		#/assembler
+		
+		#assembler [func_zCModel_GetNotFadingProtoAni]
+			mov eax, [esp+4]
+			push eax
+			call $func_zCModel_GetNotFadingAni
+			
+			test eax, eax
+			jz return
+			
+			mov eax, [eax]
+			
+		return:
 			ret 4
 		#/assembler
 		
@@ -391,7 +439,6 @@
 				je $text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl
 				
 			continue:
-				//orgcode+4
 				inc ecx
 			#/assembler
 		ELSE
@@ -406,18 +453,18 @@
 			#/assembler
 		END
 		
-		#assembler [func_zCModel_GetNotFadingProtoAni]
-			mov eax, [esp+4]
-			push eax
-			call $func_zCModel_GetNotFadingAni
-			
+		#assembler [text_oCAniCtrl_Human__Stand_call_IsAniActive__s_aim]
+			pop eax
 			test eax, eax
 			jz return
 			
-			mov eax, [eax]
+			mov eax, [eax+$field_zCModelAni_aniID]
+			push eax
+			
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetNotFadingAni
 			
 		return:
-			ret 4
 		#/assembler
 		
 		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1]
@@ -459,5 +506,322 @@
 		#assembler [text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2]
 			call $func_zCModel_GetNotFadingProtoAni
 		#/assembler
+		
+		IF engine_version <= 2
+			#assembler [text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1]
+				push eax
+				
+				mov eax, [esi+$field_zCModelAniActive_isFadingOut]
+				test eax, eax
+				
+				pop eax
+				
+				jnz $text_oCAniCtrl_Human_IsParadeRunning_inc_eax_G1
+				
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAniCtrl_Human_CanParade_cmp_layer_G1]
+				push eax
+				
+				mov eax, [esi+$field_zCModelAniActive_isFadingOut]
+				test eax, eax
+				
+				pop eax
+				
+				jnz $text_oCAniCtrl_Human_CanParade_inc_eax_G1
+				
+				orgcode
+			#/assembler
+		ELSE
+			#assembler [text_oCAniCtrl_Human_IsParadeRunning_ani_check_success_G2]
+				mov eax, [esi+$field_zCModelAniActive_isFadingOut]
+				test eax, eax
+				jnz $text_oCAniCtrl_Human_IsParadeRunning_ani_check_fail_G2
+				
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAniCtrl_Human_CanParade_ani_check_success_G2]
+				mov eax, [esi+$field_zCModelAniActive_isFadingOut]
+				test eax, eax
+				jnz $text_oCAniCtrl_Human_CanParade_ani_check_fail_G2
+				
+				orgcode
+			#/assembler
+		END
+		
+		IF engine_version == 1
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1]
+				mov ebp, [ecx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1
+				add ebp, 7
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1]
+				mov ebp, [ecx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1
+				add ebp, 7
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+		END
+		
+		IF engine_version == 2
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1A]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A]
+				mov ebp, [edx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A
+				add ebp, 7
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_edx__t_hitback_G1_G1A]
+				mov ebp, [edx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_edx__t_hitback_G1_G1A
+				add ebp, 7
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+		END
+		
+		IF engine_version == 3
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G2]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_hitf_G1_G2]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2]
+				mov ebp, [ecx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2
+				add ebp, 11
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G2_G2]
+				mov ebp, [ecx]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G2_G2
+				add ebp, 11
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+		END
+		
+		IF engine_version == 4
+			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_aim_G1_G2A]
+				mov ebx, [edx]
+				mov ebx, [ebx+$field_zCModelAniActive_isFadingOut]
+				test ebx, ebx
+				jz continue
+				
+				mov ebx, $text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_aim_G1_G2A
+				add ebx, 6
+				jmp ebx
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_hitf_G1_G2A]
+				mov ebx, [edx]
+				mov ebx, [ebx+$field_zCModelAniActive_isFadingOut]
+				test ebx, ebx
+				jz continue
+				
+				mov ebx, $text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_hitf_G1_G2A
+				add ebx, 6
+				jmp ebx
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2A]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2A]
+				pop eax
+				test eax, eax
+				jz return
+				
+				mov eax, [eax+$field_zCModelAni_aniID]
+				push eax
+				
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+				
+			return:
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A]
+				mov ebx, [ecx]
+				mov ebx, [ebx+$field_zCModelAniActive_isFadingOut]
+				test ebx, ebx
+				jz continue
+				
+				mov ebx, $text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A
+				add ebx, 6
+				jmp ebx
+				
+			continue:
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__t_hitback_G2_G2A]
+				mov ebx, [ecx]
+				mov ebx, [ebx+$field_zCModelAniActive_isFadingOut]
+				test ebx, ebx
+				jz continue
+				
+				mov ebx, $text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__t_hitback_G2_G2A
+				add ebx, 6
+				jmp ebx
+				
+			continue:
+				orgcode
+			#/assembler
+		END
+	
+		#assembler [text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G1]
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetNotFadingAni
+		#/assembler
+	
+		
+		IF engine_version >= 3
+			#assembler [text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2]
+				mov ecx, [esi+$field_zCAIPlayer_model]
+				call $func_zCModel_GetNotFadingAni
+			#/assembler
+		END
 	#/patch
 #/engine
