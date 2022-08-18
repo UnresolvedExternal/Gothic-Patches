@@ -12,6 +12,7 @@
 		// engine specific
 		INT engine_version = ZenDef(1, 2, 3, 4)
 		
+		INT text_oCNpc_EV_Parade_call_anictrl_StartHitCombo = ZenDef(0x006ACB6D, 0x006E02CF, 0x006F3ABA, 0x0075289A)
 		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x006AC0C1, 0x006DEF01, 0x006F2BB7, 0x00751997)
 		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x006AC0D1, 0x006DEF11, 0x006F2BC7, 0x007519A7)
 		INT text_oCNpc_EV_AttackFinish_call_GetModel_StartAni = ZenDef(0x006AC4CD, 0x006DF3A7, 0x006F307A, 0x00751E58)
@@ -239,6 +240,29 @@
 			
 			pop ecx
 			call $func_oCAniCtrl_Human_SetNextAni
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_Parade_call_anictrl_StartHitCombo]
+			pop eax ; aniID
+			pop edx ; target
+			
+			push eax ; aniID
+			push ecx ; anictrl
+			
+			push edx ; target
+			push eax ; aniID
+			
+			orgcode
+			
+			mov ecx, [esp] ; anictrl
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			
+			mov eax, [esp+8] ; aniID
+			push eax
+			
+			call $func_oCAniCtrl_Human_SetNextAni
+			add esp, 8
 		#/assembler
 	#/patch
 #/engine
