@@ -13,37 +13,33 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
 		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
-		
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1 = 0x0061077D
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1 = 0x006109F3
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1 = 0x00610A40
-		
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1A = 0x00633475
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A = 0x006336CD
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__t_hitback_G1_G1A = 0x00633731
-		
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G2 = 0x00639935
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_hitf_G1_G2 = 0x00639B4D
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2 = 0x00639BBB
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2 = 0x00639CEF
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2 = 0x00639FA1
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G2_G2 = 0x0063A001
-		
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_aim_G1_G2A = 0x006960D0
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_hitf_G1_G2A = 0x00696100
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2A = 0x00696332
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2A = 0x0069655C
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A = 0x00696840
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__t_hitback_G2_G2A = 0x00696890
-		
 		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G1 = ZenDef(0x006108FB, 0x006335FA, 0x00639AB7, 0x006962B5)
 		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2 = ZenDef(0x00000000, 0x00000000, 0x00639E9A, 0x00696707)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
-		
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1 = ZenDef(0x00625A76, 0x0064A816, 0x00651D38, 0x006AE5B8)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2 = ZenDef(0x00625A94, 0x0064A837, 0x00651D56, 0x006AE5D6)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3 = ZenDef(0x00625ADF, 0x0064A882, 0x00651DA1, 0x006AE621)
@@ -54,10 +50,8 @@
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_8 = ZenDef(0x00625DBD, 0x0064ABB5, 0x00652061, 0x006AE8E1)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_9 = ZenDef(0x00625E22, 0x0064AC15, 0x006520B2, 0x006AE932)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_10 = ZenDef(0x00000000, 0x00000000, 0x006520FA, 0x006AE97A)
-		
 		INT text_oCAniCtrl_Human_TransitionToInvest_mov_ebp_ptr_esi__s_walk_G1 = ZenDef(0x0062EC01, 0x0065448A, 0x00000000, 0x00000000)
 		INT text_oCAniCtrl_Human_TransitionToInvest_call_model_IsAniActive_G2 = ZenDef(0x00000000, 0x00000000, 0x0065B9FD, 0x006B838D)
-		
 		INT text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 = ZenDef(0x00628485, 0x0064D585, 0x00000000, 0x00000000)
 		INT text_oCAniCtrl_Human_IsParadeRunning_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
 		INT text_oCAniCtrl_Human_CanParade_cmp_layer_G1 = ZenDef(0x006284E8, 0x0064D5E8, 0x00000000, 0x00000000)
@@ -119,8 +113,6 @@
 		INT const_GAME_ACTION = 5
 		INT const_GAME_UP = 3
 		INT const_GAME_DOWN = 4
-		
-		INT engine_version = ZenDef(1, 2, 3, 4)
 		// end of engine specific
 		
 		HEX @text_oCNpc_SetWeaponMode2_jz_standing = 'EB'
