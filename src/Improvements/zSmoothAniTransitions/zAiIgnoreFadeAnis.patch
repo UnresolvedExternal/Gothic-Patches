@@ -17,25 +17,25 @@
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
 		
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1 = 0x0061077D
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1 = 0x0061077D
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1 = 0x006109F3
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1 = 0x00610A40
 		
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1A = 0x00633475
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1A = 0x00633475
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A = 0x006336CD
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_edx__t_hitback_G1_G1A = 0x00633731
 		
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G2 = 0x00639935
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_hitf_G1_G2 = 0x00639B4D
-		INT text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2 = 0x00639BBB
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2 = 0x00639CEF
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G2 = 0x00639935
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_hitf_G1_G2 = 0x00639B4D
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2 = 0x00639BBB
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2 = 0x00639CEF
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2 = 0x00639FA1
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G2_G2 = 0x0063A001
 		
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_aim_G1_G2A = 0x006960D0
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_edx__s_hitf_G1_G2A = 0x00696100
-		INT text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2A = 0x00696332
-		INT text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2A = 0x0069655C
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2A = 0x00696332
+		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2A = 0x0069655C
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A = 0x00696840
 		INT text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__t_hitback_G2_G2A = 0x00696890
 		
@@ -43,6 +43,21 @@
 		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2 = ZenDef(0x00000000, 0x00000000, 0x00639E9A, 0x00696707)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
+		
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1 = ZenDef(0x00625A76, 0x0064A816, 0x00651D38, 0x006AE5B8)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2 = ZenDef(0x00625A94, 0x0064A837, 0x00651D56, 0x006AE5D6)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3 = ZenDef(0x00625ADF, 0x0064A882, 0x00651DA1, 0x006AE621)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_4 = ZenDef(0x00625B44, 0x0064A8F1, 0x00651E06, 0x006AE686)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_5 = ZenDef(0x00625BA4, 0x0064A95B, 0x00651E66, 0x006AE6E6)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_6 = ZenDef(0x00625C27, 0x0064AA3E, 0x00651EE7, 0x006AE767)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_7 = ZenDef(0x00625C68, 0x0064AA82, 0x00651F28, 0x006AE7A8)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_8 = ZenDef(0x00625DBD, 0x0064ABB5, 0x00652061, 0x006AE8E1)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_9 = ZenDef(0x00625E22, 0x0064AC15, 0x006520B2, 0x006AE932)
+		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_10 = ZenDef(0x00000000, 0x00000000, 0x006520FA, 0x006AE97A)
+		
+		INT text_oCAniCtrl_Human_TransitionToInvest_mov_ebp_ptr_esi__s_walk_G1 = ZenDef(0x0062EC01, 0x0065448A, 0x00000000, 0x00000000)
+		INT text_oCAniCtrl_Human_TransitionToInvest_call_model_IsAniActive_G2 = ZenDef(0x00000000, 0x00000000, 0x0065B9FD, 0x006B838D)
+		
 		INT text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 = ZenDef(0x00628485, 0x0064D585, 0x00000000, 0x00000000)
 		INT text_oCAniCtrl_Human_IsParadeRunning_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
 		INT text_oCAniCtrl_Human_CanParade_cmp_layer_G1 = ZenDef(0x006284E8, 0x0064D5E8, 0x00000000, 0x00000000)
@@ -62,7 +77,7 @@
 		INT text_oCAniCtrl_Human_PC_JumpForward_call_zCModel_IsAniActive = ZenDef(0x00628CD0, 0x0064DF02, 0x006554B0, 0x006B1E40)
 		INT text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl = ZenDef(0x0062DE29, 0x006535FE, 0x0065AC39, 0x006B75C9)
 		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0062DE78, 0x0065364A, 0x0065AC88, 0x006B7618)
-		INT text_oCAniCtrl_Human__Stand_call_IsAniActive__s_aim = ZenDef(0x0062E002, 0x006537F9, 0x0065AE12, 0x006B77A2)
+		INT text_oCAniCtrl_Human__Stand_call_model_IsAniActive__s_aim = ZenDef(0x0062E002, 0x006537F9, 0x0065AE12, 0x006B77A2)
 		INT text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni = ZenDef(0x006229E8, 0x00647198, 0x0064E878, 0x006AB0F8)
 		INT text_oCAniCtrl_Human_CorrectAniStates_continue_search = text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni + 7
 		INT text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID = ZenDef(0x006294CA, 0x0064E73A, 0x00655CAA, 0x006B263A)
@@ -167,6 +182,21 @@
 			jz return
 			
 			mov eax, [eax]
+			
+		return:
+			ret 4
+		#/assembler
+		
+		// int zCModel::IsNotFadingAniActive(zCModelAni*)
+		#assembler [func_zCModel_IsNotFadingAniActive]
+			mov eax, [esp+4]
+			test eax, eax
+			jz return
+			
+			mov eax, [eax+$field_zCModelAni_aniID]
+			push eax
+			
+			call $func_zCModel_GetNotFadingAni
 			
 		return:
 			ret 4
@@ -453,18 +483,8 @@
 			#/assembler
 		END
 		
-		#assembler [text_oCAniCtrl_Human__Stand_call_IsAniActive__s_aim]
-			pop eax
-			test eax, eax
-			jz return
-			
-			mov eax, [eax+$field_zCModelAni_aniID]
-			push eax
-			
-			mov ecx, [esi+$field_zCAIPlayer_model]
-			call $func_zCModel_GetNotFadingAni
-			
-		return:
+		#assembler [text_oCAniCtrl_Human__Stand_call_model_IsAniActive__s_aim]
+			call $func_zCModel_IsNotFadingAniActive
 		#/assembler
 		
 		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1]
@@ -552,18 +572,8 @@
 		END
 		
 		IF engine_version == 1
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1]
@@ -596,18 +606,8 @@
 		END
 		
 		IF engine_version == 2
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G1A]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1A]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A]
@@ -640,60 +640,20 @@
 		END
 		
 		IF engine_version == 3
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G1_G2]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G2]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_hitf_G1_G2]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_hitf_G1_G2]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2]
@@ -754,32 +714,12 @@
 				orgcode
 			#/assembler
 			
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__t_hitback_G1_G2A]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2A]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
-			#assembler [text_oCAIHuman_BowMode_call_IsAniActive__s_aim_G2_G2A]
-				pop eax
-				test eax, eax
-				jz return
-				
-				mov eax, [eax+$field_zCModelAni_aniID]
-				push eax
-				
-				mov ecx, [esi+$field_zCAIPlayer_model]
-				call $func_zCModel_GetNotFadingAni
-				
-			return:
+			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2A]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A]
@@ -816,11 +756,72 @@
 			call $func_zCModel_GetNotFadingAni
 		#/assembler
 	
-		
 		IF engine_version >= 3
 			#assembler [text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2]
 				mov ecx, [esi+$field_zCAIPlayer_model]
 				call $func_zCModel_GetNotFadingAni
+			#/assembler
+		END
+		
+		IF engine_version <= 2
+			#assembler [text_oCAniCtrl_Human_TransitionToInvest_mov_ebp_ptr_esi__s_walk_G1]
+				mov ebp, [esi]
+				mov ebp, [ebp+$field_zCModelAniActive_isFadingOut]
+				test ebp, ebp
+				jz continue
+				
+				mov ebp, $text_oCAniCtrl_Human_TransitionToInvest_mov_ebp_ptr_esi__s_walk_G1
+				add ebp, 7
+				jmp ebp
+				
+			continue:
+				orgcode
+			#/assembler
+		ELSE
+			#assembler [text_oCAniCtrl_Human_TransitionToInvest_call_model_IsAniActive_G2]
+				call $func_zCModel_IsNotFadingAniActive
+			#/assembler
+		END
+		
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_4]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_5]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_6]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_7]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_8]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_9]
+			call $func_zCModel_IsNotFadingAniActive
+		#/assembler
+
+		IF engine_version >= 3
+			#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_10]
+				call $func_zCModel_IsNotFadingAniActive
 			#/assembler
 		END
 	#/patch
