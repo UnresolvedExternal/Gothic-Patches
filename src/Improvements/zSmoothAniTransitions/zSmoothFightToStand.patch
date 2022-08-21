@@ -12,6 +12,8 @@
 		// engine specific
 		INT engine_version = ZenDef(1, 2, 3, 4)
 		
+		INT text_oCNpc_EV_UseItemToState_call_model_StartAni_1 = ZenDef(0x006B026B, 0x006E415A, 0x006F7096, 0x00755EC6)
+		INT text_oCNpc_EV_UseItemToState_call_model_StartAni_2 = ZenDef(0x006B0446, 0x006E43A8, 0x006F7327, 0x00756157)
 		INT text_oCNpc_EV_Parade_call_anictrl_StartHitCombo = ZenDef(0x006ACB6D, 0x006E02CF, 0x006F3ABA, 0x0075289A)
 		INT text_oCNpc_EV_AttackRun_mov_ecx__s_walk = ZenDef(0x006AC0C1, 0x006DEF01, 0x006F2BB7, 0x00751997)
 		INT text_oCNpc_EV_AttackRun_StartAni_end = ZenDef(0x006AC0D1, 0x006DEF11, 0x006F2BC7, 0x007519A7)
@@ -30,6 +32,7 @@
 		
 		INT field_oCNpc_anictrl = ZenDef(0x9B8, 0x9C0, 0x8EC, 0x980)
 		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
+		INT field_oCNpc_interactItemTargetState = ZenDef(0x9A8, 0x9AC, 0x8DC, 0x970)
 		INT field_oCAniCtrl_Human_s_walk = 0x698
 		INT field_oCAniCtrl_Human_s_sneak = 0xA20
 		INT field_oCAniCtrl_Human_walkmode = 0x160
@@ -38,6 +41,7 @@
 		INT field_oCAniCtrl_Human_t_jump_2_stand = 0x106C
 		INT field_oCAniCtrl_Human_t_jumpuplow_2_stand = 0xA10
 		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zCModelAni_aniID = 0x4C
 		INT field_zCAIPlayer_model = 0x68
 		
 		INT func_oCNpc_GetWeaponMode = ZenDef(0x00695820, 0x006C7230, 0x006DA500, 0x00738C40)
@@ -263,6 +267,64 @@
 			
 			call $func_oCAniCtrl_Human_SetNextAni
 			add esp, 8
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_UseItemToState_call_model_StartAni_1]
+			mov eax, [esp+4]
+			push eax
+			
+			mov eax, [esp+4]
+			push eax
+			
+			orgcode
+			
+			pop edx
+			add esp, 4
+			
+			mov ecx, esi
+			mov eax, [ecx+$field_oCNpc_interactItemTargetState]
+			cmp eax, -1
+			jne return
+			
+			mov ecx, [ecx+$field_oCNpc_anictrl]
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			
+			mov eax, [edx+$field_zCModelAni_aniID]
+			push eax
+			
+			call $func_oCAniCtrl_Human_SetNextAni
+			
+		return:
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_UseItemToState_call_model_StartAni_2]
+			mov eax, [esp+4]
+			push eax
+			
+			mov eax, [esp+4]
+			push eax
+			
+			orgcode
+			
+			pop edx
+			add esp, 4
+			
+			mov ecx, esi
+			mov eax, [ecx+$field_oCNpc_interactItemTargetState]
+			cmp eax, -1
+			jne return
+			
+			mov ecx, [ecx+$field_oCNpc_anictrl]
+			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
+			push eax
+			
+			mov eax, [edx+$field_zCModelAni_aniID]
+			push eax
+			
+			call $func_oCAniCtrl_Human_SetNextAni
+			
+		return:
 		#/assembler
 	#/patch
 #/engine
