@@ -15,6 +15,7 @@
 		// engine specific
 		INT engine_version = ZenDef(1, 2, 3, 4)
 		
+		INT text_oCNpc_InteractItemIsInState_call_model_IsAniActive_or_GetAniFromAniID = ZenDef(0x006AF7F8, 0x006E35E8, 0x006F6679, 0x007554A9) 
 		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
@@ -40,6 +41,8 @@
 		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2 = ZenDef(0x00000000, 0x00000000, 0x00639E9A, 0x00696707)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
+		INT text_oCAniCtrl_Human_GetLayerAni_mov_ebx_ptr_eax = ZenDef(0x00627258, 0x0064C288, 0x00653518, 0x006AFD98)
+		INT text_oCAniCtrl_Human_CheckFallStates_call_model_IsStateActive_s_falldn = ZenDef(0x0062C2FD, 0x0065191D, 0x00658F8D, 0x006B591D)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1 = ZenDef(0x00625A76, 0x0064A816, 0x00651D38, 0x006AE5B8)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2 = ZenDef(0x00625A94, 0x0064A837, 0x00651D56, 0x006AE5D6)
 		INT text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3 = ZenDef(0x00625ADF, 0x0064A882, 0x00651DA1, 0x006AE621)
@@ -54,10 +57,10 @@
 		INT text_oCAniCtrl_Human_TransitionToInvest_call_model_IsAniActive_G2 = ZenDef(0x00000000, 0x00000000, 0x0065B9FD, 0x006B838D)
 		INT text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 = ZenDef(0x00628485, 0x0064D585, 0x00000000, 0x00000000)
 		INT text_oCAniCtrl_Human_IsParadeRunning_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
-		INT text_oCAniCtrl_Human_CanParade_cmp_layer_G1 = ZenDef(0x006284E8, 0x0064D5E8, 0x00000000, 0x00000000)
-		INT text_oCAniCtrl_Human_CanParade_inc_eax_G1 = text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1 + 6
 		INT text_oCAniCtrl_Human_IsParadeRunning_ani_check_success_G2 = ZenDef(0x00000000, 0x00000000, 0x00654BDE, 0x006B156E)
 		INT text_oCAniCtrl_Human_IsParadeRunning_ani_check_fail_G2 = ZenDef(0x00000000, 0x00000000, 0x00654BF5, 0x006B1585)
+		INT text_oCAniCtrl_Human_CanParade_cmp_layer_G1 = ZenDef(0x006284E8, 0x0064D5E8, 0x00000000, 0x00000000)
+		INT text_oCAniCtrl_Human_CanParade_inc_eax_G1 = text_oCAniCtrl_Human_CanParade_cmp_layer_G1 + 6
 		INT text_oCAniCtrl_Human_CanParade_ani_check_success_G2 = ZenDef(0x00000000, 0x00000000, 0x00654C49, 0x006B15D9)
 		INT text_oCAniCtrl_Human_CanParade_ani_check_fail_G2 = ZenDef(0x00000000, 0x00000000, 0x00654C60, 0x006B15F0)
 		INT text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1 = ZenDef(0x0062E1A1, 0x006539A1, 0x0065AFB1, 0x006B7941)
@@ -85,6 +88,8 @@
 		INT text_zCModel_StartAni_call_FadeOutAni_end = text_zCModel_StartAni_call_FadeOutAni + 5
 		INT text_zCModel_StartAni_cmp_startMode_2 = ZenDef(0x00561508, 0x00579BDC, 0x00575D98, 0x0057B2B8)
 		INT text_zCModel_StartAni_cmp_startMode_2_end = text_zCModel_StartAni_cmp_startMode_2 + 18
+		INT text_zCModel_IsStateActive_jnz_cmp_layers = ZenDef(0x00563D71, 0x0057C5F1, 0x005788C1, 0x0057DDE1)
+		INT text_zCModel_IsStateActive_fail_cmp_layers = ZenDef(0x00563E77, 0x0057C6F6, 0x005789C7, 0x0057DEE7)
 		
 		INT field_oCAniCtrl_Human__t_walk_2_aim = 0x10E8
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
@@ -775,46 +780,62 @@
 			#/assembler
 		END
 		
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_4]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_5]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_6]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_7]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_8]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
-		#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_9]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_1, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_2, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_3, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_4, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_5, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_6, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_7, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_8, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_9, func_zCModel_IsNotFadingAniActive)
+		
 		IF engine_version >= 3
-			#assembler [text_oCAniCtrl_Human_Turn_call_model_IsAniActive_10]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
+			CALL(text_oCAniCtrl_Human_Turn_call_model_IsAniActive_10, func_zCModel_IsNotFadingAniActive)
 		END
+		
+		IF engine_version <= 2
+			CALL(text_oCNpc_InteractItemIsInState_call_model_IsAniActive_or_GetAniFromAniID, func_zCModel_IsNotFadingAniActive)
+		ELSE
+			CALL(text_oCNpc_InteractItemIsInState_call_model_IsAniActive_or_GetAniFromAniID, func_zCModel_GetNotFadingProtoAni)
+		END
+		
+		#assembler [text_oCAniCtrl_Human_GetLayerAni_mov_ebx_ptr_eax]
+			mov ebx, [eax+$field_zCModelAniActive_isFadingOut]
+			test ebx, ebx
+			jz continue
+			
+			mov ebx, $text_oCAniCtrl_Human_GetLayerAni_mov_ebx_ptr_eax
+			add ebx, 7
+			jmp ebx
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		INT test_fading = 1
+		
+		#assembler [text_oCAniCtrl_Human_CheckFallStates_call_model_IsStateActive_s_falldn]
+			mov dword ptr [$test_fading], 0
+			orgcode
+			mov dword ptr [$test_fading], 1
+		#/assembler
+		
+		#assembler [text_zCModel_IsStateActive_jnz_cmp_layers]
+			orgcode
+			
+			cmp dword ptr [$test_fading], 0
+			je return
+			
+			push eax
+			mov eax, [ebp]
+			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			pop eax
+			
+			jnz $text_zCModel_IsStateActive_fail_cmp_layers
+			
+		return:
+		#/assembler		
 	#/patch
 #/engine
