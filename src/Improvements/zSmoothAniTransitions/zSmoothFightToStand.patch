@@ -20,7 +20,6 @@
 		INT text_oCNpc_EV_AttackFinish_call_model_StartAni = ZenDef(0x006AC4CD, 0x006DF3A7, 0x006F307A, 0x00751E58)
 		INT text_oCNpc_EV_DropVob_call_anictrl_SetNextAni = ZenDef(0x006AE049, 0x006E1810, 0x006F4D31, 0x00753B66)
 		INT text_oCNpc_EV_DropVob_mov_ecx_model = ZenDef(0x006AE062, 0x006E182F, 0x006F4D4A, 0x00753B7F)
-		INT text_oCAniCtrl_Human_oCAniCtrl_Human_mov_wmode_0 = ZenDef(0x0, 0x0, 0x0, 0x006A3B52)
 		INT text_oCAniCtrl_Human__Stand_jnz_npc_GetWeaponMode = ZenDef(0x0062DE8E, 0x00653660, 0x0065AC9E, 0x006B762E)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_call_LandAndStartAni = ZenDef(0x0062B8BA, 0x00650E27, 0x0065823A, 0x006B4BCA)
 		INT text_oCAniCtrl_Human_CheckSpecialStates_t_jumpupmid_2_stand = ZenDef(0x0062BBAE, 0x0065116F, 0x006584FF, 0x006B4E8F) + 2
@@ -47,7 +46,6 @@
 		INT field_oCNpc_anictrl = ZenDef(0x9B8, 0x9C0, 0x8EC, 0x980)
 		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
 		INT field_oCNpc_interactItemTargetState = ZenDef(0x9A8, 0x9AC, 0x8DC, 0x970)
-		INT field_oCAniCtrl_Human_wmode = 0x150
 		INT field_oCAniCtrl_Human_s_walk = 0x698
 		INT field_oCAniCtrl_Human_s_sneak = 0xA20
 		INT field_oCAniCtrl_Human_walkmode = 0x160
@@ -433,9 +431,5 @@
 		
 		INT @text_oCAIHuman_PC_CheckSpecialStates_use_s_woundedb_1 = offset_str_s_wounded
 		INT @text_oCAIHuman_PC_CheckSpecialStates_use_s_woundedb_2 = offset_str_s_wounded
-		
-		#assembler [text_oCAniCtrl_Human_oCAniCtrl_Human_mov_wmode_0]
-			mov dword ptr [esi+$field_oCAniCtrl_Human_wmode], 1
-		#/assembler
 	#/patch
 #/engine
