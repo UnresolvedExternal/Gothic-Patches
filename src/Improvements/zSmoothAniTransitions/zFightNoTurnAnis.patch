@@ -10,6 +10,7 @@
 		INT text_oCNpc_EV_AttackRun_call_human_ai_PC_Turnings = ZenDef(0x00000000, 0x00000000, 0x006F2B77, 0x00751957)
 		INT text_G1A_oCNpc_EV_AttackRun_call_anictrl_HitCombo = 0x006DEECE
 		INT text_oCAIHuman_FightMelee_jnz_npc_GetFocusVob = ZenDef(0x00611110, 0x00633E74, 0x0063A6DF, 0x00696F6F)
+		INT text_oCAIHuman_BowMode_mov_eax_model = ZenDef(0x00610A62, 0x006337A1, 0x00639C0B, 0x00696377)
 		INT text_G1_patch_Turn_Attack_on_Run_call_oCAIHuman_PC_Turnings = 0x00737A87
 		INT text_oCNpc_EV_TakeVob_call_model_StartAni = ZenDef(0x006ADC21, 0x006E13CC, 0x006F48B1, 0x007536ED)
 		
@@ -311,5 +312,11 @@
 		END
 		
 		HEX @text_oCAIHuman_FightMelee_jnz_npc_GetFocusVob = '90 90'
+		
+		#assembler [text_oCAIHuman_BowMode_mov_eax_model]
+			mov ecx, esi
+			call $func_oCAniCtrl_Human_StopTurnAnis
+			orgcode
+		#/assembler
 	#/patch
 #/engine
