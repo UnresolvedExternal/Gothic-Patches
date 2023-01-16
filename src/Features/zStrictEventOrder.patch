@@ -1,0 +1,87 @@
+// TODO: remove EV_LOOKAT messages in reversed order
+
+#engine [G1, G1A, G2, G2A]
+	#patch [zStrictEventOrder]
+		// engine specific
+		INT text_zCEventManager_InsertInList_overlay_or_high_priority = ZenDef(0x006DE157, 0x0, 0x0, 0x0078740F)
+		
+		INT func_zCArray_pvoid_InsertAtPos = ZenDef(0x005FA350, 0x0, 0x0, 0x00628B20)
+		
+		INT vfunc_zCEventMessage_IsOverlay = 0x10
+		INT vfunc_zCEventMessage_IsHighPriority = 0x18
+		
+		INT field_zCEventManager_messageList_parray = 0x30
+		INT field_zCEventManager_messageList_numInArray = field_zCEventManager_messageList_parray + 8
+		// end of engine specific
+		
+		#assembler [func_zCEventMessage_GetPriority]
+			push esi
+			mov esi, ecx
+			
+			push edi
+			xor edi, edi
+			
+			mov edx, [ecx]
+			call [edx+$vfunc_zCEventMessage_IsOverlay]
+			test eax, eax
+			jz check_high_priority
+			
+			add edi, 2
+			
+		check_high_priority:
+			mov ecx, esi
+			mov edx, [ecx]
+			call [edx+$vfunc_zCEventMessage_IsHighPriority]
+			test eax, eax
+			jz return
+			
+			inc edi
+			
+		return:
+			mov eax, edi
+			pop edi
+			pop esi
+			ret
+		#/assembler
+		
+		#assembler [text_zCEventManager_InsertInList_overlay_or_high_priority]
+			mov ecx, ebp
+			call $func_zCEventMessage_GetPriority
+			mov edi, eax
+			
+			xor ebx, ebx
+			
+		search:
+			cmp ebx, [esi+$field_zCEventManager_messageList_numInArray]
+			jge search_end
+			
+			mov ecx, ebx
+			imul ecx, 4
+			add ecx, [esi+$field_zCEventManager_messageList_parray]
+			mov ecx, [ecx]
+			call $func_zCEventMessage_GetPriority
+			cmp edi, eax
+			jg search_end
+			
+			inc ebx
+			jmp search
+			
+		search_end:
+			push ebp
+			mov ebp, esp
+			
+			push ebx
+			push ebp
+			lea ecx, [esi+$field_zCEventManager_messageList_parray]
+			call $func_zCArray_pvoid_InsertAtPos
+			
+			pop ebp
+			
+			pop edi
+			pop esi
+			pop ebp
+			pop ebx
+			ret 4
+		#/assembler
+	#/patch
+#/engine
