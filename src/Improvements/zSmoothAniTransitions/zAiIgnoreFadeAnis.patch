@@ -346,6 +346,14 @@
 			mov ecx, esi
 			call $func_zCModel_StopAni
 			
+			mov ecx, dword ptr [$engine_version]
+			cmp ecx, 2
+			jg num_in_ecx
+			
+			mov edx, [esi+$field_zCModel_numActiveAnis]
+			jmp $text_zCModel_StartAni_cmp_startMode_2_end
+			
+		num_in_ecx:
 			mov ecx, [esi+$field_zCModel_numActiveAnis]
 			jmp $text_zCModel_StartAni_cmp_startMode_2_end
 		
