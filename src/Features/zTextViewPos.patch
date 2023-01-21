@@ -1,23 +1,23 @@
-#engine [G1, G2A]
+#engine [G1, G1A, G2, G2A]
 	#patch [zTextViewPos]		
 		// engine specific
-		INT pos_start = ZenDef(0x00638CBA, 0x0, 0x0, 0x006C2E6A)
-		INT size_start = ZenDef(0x00638CDB, 0x0, 0x0, 0x006C2E8B)
+		INT text_oCGame_UpdateScreenResolution_call_SetPos = ZenDef(0x00638CBA, 0x0065F20A, 0x0066636A, 0x006C2E6A)
+		INT text_oCGame_UpdateScreenResolution_call_SetSize = ZenDef(0x00638CDB, 0x0065F22B, 0x0066638B, 0x006C2E8B)
 		// end of engine specific
 		
 		INT PosX = 2048
-		INT posY = 1024
+		INT PosY = 1024
 		INT SizeX = 4096
 		INT SizeY = 1024
 
-		#assembler [pos_start]
+		#assembler [text_oCGame_UpdateScreenResolution_call_SetPos]
 			push $PosY
 			push $PosX
 			orgcode+2
 		#/assembler
 		
-		#assembler [size_start]
-			pop eax
+		#assembler [text_oCGame_UpdateScreenResolution_call_SetSize]
+			add esp, 4
 			push $SizeY
 			push $SizeX
 			orgcode+1
