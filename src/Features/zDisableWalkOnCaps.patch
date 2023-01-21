@@ -1,0 +1,9 @@
+#engine [G1, G1A, G2, G2A]
+    #patch [zDisableWalkOnCaps]
+        // engine specific
+        INT text_oCAIHuman_PC_SlowMove_jz_capslock = ZenDef(0x00614265, 0x006370B9, 0x0063DB4B, 0x0069A39B)
+        // end of engine specific
+ 
+        HEX @text_oCAIHuman_PC_SlowMove_jz_capslock = 'EB'
+    #/patch
+#/engine
