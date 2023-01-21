@@ -1,11 +1,11 @@
-// TODO: remove EV_LOOKAT messages in reversed order
-
 #engine [G1, G1A, G2, G2A]
 	#patch [zStrictEventOrder]
 		// engine specific
-		INT text_zCEventManager_InsertInList_overlay_or_high_priority = ZenDef(0x006DE157, 0x0, 0x0, 0x0078740F)
+		INT text_zCEventManager_InsertInList_overlay_or_high_priority = ZenDef(0x006DE157, 0x007164A3, 0x007279CF, 0x0078740F)
+		INT text_oCNpc_EV_LookAt_mov_csg_0 = ZenDef(0x006B3247, 0x006E78A7, 0x006FAB08, 0x00759A78)
+		INT text_oCNpc_EV_LookAt_mov_csg_1_number = ZenDef(0x006B3295, 0x006E78F5, 0x006FAB53, 0x00759AC3) + 4
 		
-		INT func_zCArray_pvoid_InsertAtPos = ZenDef(0x005FA350, 0x0, 0x0, 0x00628B20)
+		INT func_zCArray_pvoid_InsertAtPos = ZenDef(0x005FA350, 0x0061B930, 0x006213A0, 0x00628B20)
 		
 		INT vfunc_zCEventMessage_IsOverlay = 0x10
 		INT vfunc_zCEventMessage_IsHighPriority = 0x18
@@ -83,5 +83,8 @@
 			pop ebx
 			ret 4
 		#/assembler
+		
+		HEX @text_oCNpc_EV_LookAt_mov_csg_0 = '90 90 90 90'
+		INT @text_oCNpc_EV_LookAt_mov_csg_1_number = 0		
 	#/patch
 #/engine
