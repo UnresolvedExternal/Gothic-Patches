@@ -6,7 +6,7 @@
 		
 		INT argument_list_size = ZenDef(8, 8, 12, 12)
 		
-		INT field_zCVob_sleepingMode = ZenDef(0x0E0, 0x0E0, 0x100, 0x100) + 14
+		INT field_zCVob_homeWorld = ZenDef(0xA8, 0xA8, 0xB8, 0xB8)
 		// end of engine specific
 		
 		#assembler [text_oCMag_Book_Spell_Cast_call_Spell_Setup]
@@ -14,9 +14,8 @@
 			test eax, eax
 			jz continue
 			
-			mov al, [ebp+$field_zCVob_sleepingMode]
-			and al, 3
-			test al, al
+			mov eax, [ebp+$field_zCVob_homeWorld]
+			test eax, eax
 			jnz continue
 
 			add esp, $argument_list_size
