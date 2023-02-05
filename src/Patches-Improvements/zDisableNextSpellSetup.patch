@@ -1,7 +1,7 @@
 #engine [G1, G1A, G2, G2A]
 	#patch [zDisableNextSpellSetup]
 		// engine specific
-		INT text_oCMag_Book_Spell_Cast_call_Spell_Setup = ZenDef(0x00470118, 0x00478FCB, 0x004758B5, 0x00476E12)
+		INT text_oCMag_Book_Spell_Cast_call_Spell_Setup = ZenDef(0x00470118, 0x00478FCB, 0x00475A73, 0x00476E12)
 		INT text_oCMag_Book_Spell_Cast_call_Spell_Setup_after = text_oCMag_Book_Spell_Cast_call_Spell_Setup + 5
 		
 		INT argument_list_size = ZenDef(8, 8, 12, 12)
@@ -14,7 +14,7 @@
 			test eax, eax
 			jz continue
 			
-			mov eax, [ebp+$field_zCVob_homeWorld]
+			mov eax, [eax+$field_zCVob_homeWorld]
 			test eax, eax
 			jnz continue
 
