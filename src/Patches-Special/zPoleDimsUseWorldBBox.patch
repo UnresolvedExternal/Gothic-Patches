@@ -1,0 +1,15 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zPoleDimsUseWorldBBox]
+		// engine specific
+		INT text_zCCollObjectCharacter_GetCollisionPoleYDims_fld_bbox3DLocalFixed_mins_VY = ZenDef(0x0053C35C, 0x005538DC, 0x0054B62C, 0x0055084C) + 2
+		INT text_zCCollObjectCharacter_GetCollisionPoleYDims_add_eax_field_zCModel_bbox3DLocalFixed = ZenDef(0x0053C366, 0x005538E6, 0x0054B636, 0x00550856) + 1
+		INT text_zCCollObjectCharacter_TestHardCollisions_fld_bbox3DLocalFixed_mins_VY = ZenDef(0x0053D416, 0x00554AB6, 0x0054C8AF, 0x00551ACF) + 2
+		
+		INT sizeof_zTBBox3D = 0x18
+		// end of engine specific
+		
+		INT @text_zCCollObjectCharacter_GetCollisionPoleYDims_fld_bbox3DLocalFixed_mins_VY -= sizeof_zTBBox3D
+		INT @text_zCCollObjectCharacter_GetCollisionPoleYDims_add_eax_field_zCModel_bbox3DLocalFixed -= sizeof_zTBBox3D
+		INT @text_zCCollObjectCharacter_TestHardCollisions_fld_bbox3DLocalFixed_mins_VY -= sizeof_zTBBox3D
+	#/patch
+#/engine
