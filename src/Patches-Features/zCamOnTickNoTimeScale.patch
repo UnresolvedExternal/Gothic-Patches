@@ -1,0 +1,10 @@
+#engine [G1, G2, G2A]
+	#patch [zCamOnTickNoTimeScale]
+		// engine specific
+		INT text_zCCSCamera_OnTick_set_motion_factor = ZenDef(0x004B9B44, 0x00000000, 0x004C0A1B, 0x004C2F8B)
+		INT length_zCCSCamera_OnTick_set_motion_factor = 16
+		// end of engine specific
+		
+		MemSet(text_zCCSCamera_OnTick_set_motion_factor, '90', length_zCCSCamera_OnTick_set_motion_factor)
+	#/patch
+#/engine
