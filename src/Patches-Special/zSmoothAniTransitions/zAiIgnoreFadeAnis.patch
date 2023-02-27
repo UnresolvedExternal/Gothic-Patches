@@ -1,15 +1,3 @@
-// Fade animations should not be taken into account in the controller or AI logic:
-// they are only needed for visual smoothness.
-//
-// Currently, only the following functions caused problems (with other patches):
-// 1) oCAniCtrl_Human::IsStateAniActive - in BowMode (run to stand)
-// 2) oCAniCtrl_Human::IsWalking - attack-run instead of attack
-// 3) zCModel::StartAni - fading already faded animation instead of an active one
-// 4) oCAniCtrl_Human::PC_JumpForward - run-jump instead of stand-jump
-// 5) Tweak: stop the fading animation immedeatly if the same animation is requested to start
-// 6) zCModelNodeInst::CalcWeights - fading animation gets stopped if it has no weight at least in one node
-// 7) oCAniCtrl_Human::_Stand - suppress a jump
-
 #engine [G1, G1A, G2, G2A]
 	#patch [zAiIgnoreFadeAnis]
 		// engine specific
