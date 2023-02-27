@@ -488,29 +488,12 @@
 			#/assembler
 		END
 		
-		#assembler [text_oCAniCtrl_Human__Stand_call_model_IsAniActive__s_aim]
-			call $func_zCModel_IsNotFadingAniActive
-		#/assembler
-		
-		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
-		
-		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_2]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
-		
-		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_3]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
-		
-		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_4]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
-		
-		#assembler [text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_5]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
+		CALL(text_oCAniCtrl_Human__Stand_call_model_IsAniActive__s_aim, func_zCModel_IsNotFadingAniActive)
+		CALL(text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_1, func_zCModel_GetNotFadingProtoAni)
+		CALL(text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_2, func_zCModel_GetNotFadingProtoAni)
+		CALL(text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_3, func_zCModel_GetNotFadingProtoAni)
+		CALL(text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_4, func_zCModel_GetNotFadingProtoAni)
+		CALL(text_oCAniCtrl_Human__Forward_call_model_GetAniFromAniID_5, func_zCModel_GetNotFadingProtoAni)
 		
 		#assembler [text_oCAniCtrl_Human__Forward_call_model_IsAniActive]
 			pop eax
@@ -524,13 +507,8 @@
 		return:
 		#/assembler
 		
-		#assembler [text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
-		
-		#assembler [text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2]
-			call $func_zCModel_GetNotFadingProtoAni
-		#/assembler
+		CALL(text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1, func_zCModel_GetNotFadingProtoAni)
+		CALL(text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2, func_zCModel_GetNotFadingProtoAni)
 		
 		IF engine_version <= 2
 			#assembler [text_oCAniCtrl_Human_IsParadeRunning_cmp_layer_G1]
@@ -577,9 +555,7 @@
 		END
 		
 		IF engine_version == 1
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1, func_zCModel_IsNotFadingAniActive)
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1]
 				mov ebp, [ecx]
@@ -611,9 +587,7 @@
 		END
 		
 		IF engine_version == 2
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1A]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1A, func_zCModel_IsNotFadingAniActive)
 
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_edx__s_hitf_G1_G1A]
 				mov ebp, [edx]
@@ -645,21 +619,10 @@
 		END
 		
 		IF engine_version == 3
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G2]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
-			
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_hitf_G1_G2]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
-
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
-			
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G2, func_zCModel_IsNotFadingAniActive)
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_hitf_G1_G2, func_zCModel_IsNotFadingAniActive)
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2, func_zCModel_IsNotFadingAniActive)
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2, func_zCModel_IsNotFadingAniActive)
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G2_G2]
 				mov ebp, [ecx]
@@ -719,13 +682,8 @@
 				orgcode
 			#/assembler
 			
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2A]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
-			
-			#assembler [text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2A]
-				call $func_zCModel_IsNotFadingAniActive
-			#/assembler
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__t_hitback_G1_G2A, func_zCModel_IsNotFadingAniActive)
+			CALL(text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G2_G2A, func_zCModel_IsNotFadingAniActive)
 			
 			#assembler [text_oCAIHuman_BowMode_mov_ebx_ptr_ecx__s_hitf_G2_G2A]
 				mov ebx, [ecx]
