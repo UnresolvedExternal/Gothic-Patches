@@ -29,6 +29,9 @@
 		INT text_oCAIHuman_BowMode_call_IsStateAniActive__s_aim_G2 = ZenDef(0x00000000, 0x00000000, 0x00639E9A, 0x00696707)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G1 = ZenDef(0x00610A59, 0x00633794, 0x00639BFE, 0x0069636A)
 		INT text_oCAIHuman_BowMode_call_IsStanding_G2 = ZenDef(0x00000000, 0x00000000, 0x0063A03B, 0x006968C9)
+		INT text_oCAIHuman_PC_SpecialMove_SetDoJump_1 = ZenDef(0x0061389C, 0x00636C72, 0x0063D6BB, 0x00699F0B)
+		INT text_oCAIHuman_PC_SpecialMove_SetDoJump_2 = ZenDef(0x006138AC, 0x00636C84, 0x0063D6F3, 0x00699F43)
+		INT text_oCAIHuman_PC_SpecialMove_SetDoJump_3 = ZenDef(0x00000000, 0x00000000, 0x0063D705, 0x00699F55)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_model_IsAniActive_s_jump = ZenDef(0x00612EE2, 0x006361E2, 0x0063CCF2, 0x00699542)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_model_IsAniActive_s_hang = ZenDef(0x006130C1, 0x006363FF, 0x0063CED1, 0x00699721)
 		INT text_oCAIHuman_PC_CheckSpecialStates_call_model_IsAniActive_s_woundedb = ZenDef(0x00613403, 0x006367B3, 0x0063D213, 0x00699A63)
@@ -84,10 +87,13 @@
 		INT text_zCModel_IsStateActive_jnz_cmp_layers = ZenDef(0x00563D71, 0x0057C5F1, 0x005788C1, 0x0057DDE1)
 		INT text_zCModel_IsStateActive_fail_cmp_layers = ZenDef(0x00563E77, 0x0057C6F6, 0x005789C7, 0x0057DEE7)
 		
+		INT field_oCAniCtrl_Human_do_jump = 0x170
 		INT field_oCAniCtrl_Human__t_walk_2_aim = 0x10E8
+		INT field_oCAniCtrl_Human__s_walk = 0x1008
 		INT field_oCAniCtrl_Human__s_walkl = 0x1014
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
-		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C		
+		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C
+		INT field_oCAniCtrl_Human__t_walkr_2_walk = 0x1024
 		INT field_zCModelAniActive_isFadingOut = 0x1C
 		INT field_zTNodeAni_modelAni = 0x0
 		INT field_zTNodeAni_weight = 0x4
@@ -154,7 +160,6 @@
 			test edx, edx
 			jz return
 			
-		fail:
 			xor eax, eax
 			
 		return:
@@ -814,5 +819,64 @@
 		#/assembler
 		
 		MemSet(text_oCAniCtrl_Human_CheckSpecialStates_call_SetPhysicsEnabled, '90', 9)
+		
+		// void __thiscall oCAIHuman::CalcDoJump()
+		// ecx is not provided (esi or ebx is selected)
+		#assembler [func_oCAIHuman_CalcDoJump]
+			push esi
+			push edi
+			
+			mov ecx, dword ptr [$engine_version]
+			cmp ecx, 1
+			je use_esi
+			
+			mov esi, ebx
+			
+		use_esi:
+			mov edi, $field_oCAniCtrl_Human__s_walk
+			
+		process:
+			cmp edi, $field_oCAniCtrl_Human__t_walkr_2_walk
+			jg fail
+		
+			mov eax, esi
+			add eax, edi
+			mov eax, [eax]
+			add edi, 4
+			test eax, eax
+			jle process
+			
+			push eax
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetNotFadingAni
+			test eax, eax
+			jz process
+			
+			mov eax, 1
+			jmp return
+			
+			jmp process
+			
+		fail:
+			xor eax, eax
+			
+		return:
+			mov [esi+$field_oCAniCtrl_Human_do_jump], eax
+			
+			pop edi
+			pop esi
+			ret
+		#/assembler
+
+		CALL(text_oCAIHuman_PC_SpecialMove_SetDoJump_1, func_oCAIHuman_CalcDoJump)
+		CALL(text_oCAIHuman_PC_SpecialMove_SetDoJump_2, func_oCAIHuman_CalcDoJump)
+		
+		HEX @(text_oCAIHuman_PC_SpecialMove_SetDoJump_1 + 5) = '90'
+		HEX @(text_oCAIHuman_PC_SpecialMove_SetDoJump_2 + 5) = '90'
+		
+		IF engine_version >= 2
+			CALL(text_oCAIHuman_PC_SpecialMove_SetDoJump_3, func_oCAIHuman_CalcDoJump)
+			HEX @(text_oCAIHuman_PC_SpecialMove_SetDoJump_3 + 5) = '90'
+		END
 	#/patch
 #/engine
