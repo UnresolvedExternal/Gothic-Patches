@@ -1,0 +1,14 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zDisablePhysicsLatter]
+		// engine specific
+		INT text_zCAIPlayer_fld_aboveFloor = ZenDef(0x004FE173, 0x00511552, 0x0050AEC6, 0x0050DC76)
+		
+		FLOAT const_aboveFloorMultiplier = 1.1
+		// end of engine specific
+		
+		#assembler [text_zCAIPlayer_fld_aboveFloor]
+			orgcode
+			fmul dword ptr ds:[$const_aboveFloorMultiplier]
+		#/assembler
+	#/patch
+#/engine
