@@ -1,0 +1,146 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zOverlayOrderFix]
+		// engine specific
+		INT text_oCNpc_UnShrink_overlay_loop_begin = ZenDef(0x0068AA59, 0x006BAFE3, 0x006CEDFA, 0x0072CF87)
+		INT text_oCNpc_UnShrink_overlay_loop_end = ZenDef(0x0068AAFC, 0x006BB094, 0x006CEE9C, 0x0072D02C)
+		INT text_oCNpc_Unarchive_jle_numOverlays_0 = ZenDef(0x006A3435, 0x006D5D39, 0x006E89EE, 0x0074748E)
+		INT text_oCNpc_Unarchive_after_loop = ZenDef(0x006A350B, 0x006D5E3D, 0x006E8B15, 0x007475B5)
+		INT text_oCNpc_RemoveOverlay_reorder_begin = ZenDef(0x0068B11E, 0x006BB6F9, 0x006CF49E, 0x0072D69E)
+		INT text_oCNpc_RemoveOverlay_reorder_end = ZenDef(0x0068B148, 0x006BB728, 0x006CF4C8, 0x0072D6C8)
+		
+		INT func_zCModel_ApplyModelProtoOverlay = ZenDef(0x0055EFB0, 0x00577340, 0x00573540, 0x005787F0)
+		INT func_zSTRING_operator_assign = ZenDef(0x0057E0C0, 0x005988F0, 0x00597950, 0x0059CEB0)
+		
+		INT field_oCNpc_activeOverlays_vector = ZenDef(0x960, 0x964, 0x894, 0x928)
+		INT field_oCNpc_activeOverlays_numInArray = field_oCNpc_activeOverlays_vector + 8
+		
+		INT var_oCNpc_UnShrink_model = ZenDef(0xCC, 0xD0, 0x100, 0x100) - ZenDef(0xB8, 0x10, 0xEC, 0xEC) + 12
+		
+		INT sizeof_zSTRING = 0x14
+		
+		INT buffer = CreateMemString("")
+		INT num_overlays = 0
+		// end of engine specific
+		
+		#assembler [text_oCNpc_UnShrink_overlay_loop_begin]
+			push edi
+			push ebx
+			
+			xor edi, edi
+			xor ebx, ebx
+			
+		loop:
+			mov eax, [esi+$field_oCNpc_activeOverlays_numInArray]
+			sub eax, ebx
+			cmp edi, eax
+			jge return
+			
+			mov eax, edi
+			add eax, ebx
+			imul eax, $sizeof_zSTRING
+			mov ecx, [esi+$field_oCNpc_activeOverlays_vector]
+			add eax, ecx
+			push eax
+			mov ecx, [esp+$var_oCNpc_UnShrink_model]
+			call $func_zCModel_ApplyModelProtoOverlay
+			test eax, eax
+			jnz skip_remove
+			
+			inc ebx
+			
+		skip_remove:
+			test ebx, ebx
+			jnz skip_shift
+		
+			mov edx, [esi+$field_oCNpc_activeOverlays_vector]
+			mov ecx, edi
+			imul ecx, $sizeof_zSTRING
+			add ecx, edx
+			mov eax, edi
+			add eax, ebx
+			imul eax, $sizeof_zSTRING
+			add eax, edx
+			push eax
+			call $func_zSTRING_operator_assign
+		
+		skip_shift:
+			inc edi
+			jmp loop
+			
+		return:
+			mov eax, [esi+$field_oCNpc_activeOverlays_numInArray]
+			sub eax, ebx
+			mov [esi+$field_oCNpc_activeOverlays_numInArray], eax
+			pop ebx
+			pop edi
+		#/assembler [text_oCNpc_UnShrink_overlay_loop_end]
+		
+		#assembler [text_oCNpc_Unarchive_jle_numOverlays_0]
+			mov eax, [ebp+$field_oCNpc_activeOverlays_numInArray]
+			mov dword ptr [$num_overlays], eax
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_Unarchive_after_loop]
+			xor edi, edi
+			
+		loop:
+			mov edx, [ebp+$field_oCNpc_activeOverlays_numInArray]
+			dec edx
+			sub edx, edi
+			imul edx, $sizeof_zSTRING
+			mov eax, dword ptr [$num_overlays]
+			add eax, edi
+			imul eax, $sizeof_zSTRING
+			mov ecx, [ebp+$field_oCNpc_activeOverlays_vector]
+			add eax, ecx
+			add edx, ecx
+			
+			cmp eax, edx
+			jge return
+			
+			push eax
+			push edx
+			
+			push eax
+			mov ecx, $buffer
+			call $func_zSTRING_operator_assign
+			
+			mov edx, [esp]
+			mov eax, [esp+4]
+			
+			push edx
+			mov ecx, eax
+			call $func_zSTRING_operator_assign
+			
+			pop edx
+			pop eax
+			
+			push $buffer
+			mov ecx, edx
+			call $func_zSTRING_operator_assign
+			
+			inc edi
+			jmp loop
+			
+		return:
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_RemoveOverlay_reorder_begin]
+		loop:
+			mov eax, edi
+			imul eax, $sizeof_zSTRING
+			mov ecx, [ebx+$field_oCNpc_activeOverlays_vector]
+			add ecx, eax
+			lea eax, [ecx+$sizeof_zSTRING]
+			push eax
+			call $func_zSTRING_operator_assign
+			
+			inc edi
+			mov eax, dword ptr [ebx+$field_oCNpc_activeOverlays_numInArray]
+			cmp edi, eax
+			jle loop
+		#/assembler [text_oCNpc_RemoveOverlay_reorder_end]
+	#/patch
+#/engine
