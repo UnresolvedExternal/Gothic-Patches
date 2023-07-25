@@ -1,0 +1,53 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zMobInterStopMoveAnis]
+		// engine specific
+		INT text_oCMobInter_StartInteraction_call_StartAni = ZenDef(0x0067FDB7, 0x006AEEF4, 0x006C365B, 0x007216EB)
+		
+		INT func_zCModel_StopAni = ZenDef(0x00560EE0, 0x00579370, 0x00575790, 0x0057ACB0)
+		
+		INT field_zCModelAni_aniFlags = 0xE0
+		INT field_zCModelAniActive_isFadingOut = 0x1C
+		INT field_zCModel_numActiveAnis = 0x34
+		INT field_zCModel_aniChannels = 0x38
+		
+		INT value_oCMobInter_StartInteraction_model = 0
+		// end of engine specific
+		
+		#assembler [text_oCMobInter_StartInteraction_call_StartAni]
+			mov dword ptr [$value_oCMobInter_StartInteraction_model], ecx
+			orgcode
+			mov ecx, dword ptr [$value_oCMobInter_StartInteraction_model]
+			push edi
+			mov edi, [ecx+$field_zCModel_numActiveAnis]
+			
+		loop:
+			dec edi
+			jl return
+			
+			mov eax, edi
+			shl eax, 2
+			add eax, $field_zCModel_aniChannels
+			add eax, ecx
+			mov eax, [eax]
+			cmp dword ptr [eax+$field_zCModelAniActive_isFadingOut], 0
+			je loop
+			
+			mov edx, [eax] ; protoAni
+			test edx, edx
+			jz loop
+			
+			mov edx, [edx+$field_zCModelAni_aniFlags]
+			and edx, 3
+			jz loop
+			
+			push ecx
+			push eax
+			call $func_zCModel_StopAni
+			pop ecx
+			jmp loop
+			
+		return:
+			pop edi
+		#/assembler
+	#/patch
+#/engine
