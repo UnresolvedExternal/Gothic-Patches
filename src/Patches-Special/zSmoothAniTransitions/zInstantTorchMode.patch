@@ -1,0 +1,9 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zInstantTorchMode]
+		// engine specific
+		INT text_oCNpc_SetTorchAni_jz_now = ZenDef(0x0069807F, 0x006C9D37, 0x006DCCBF, 0x0073B47F)
+		// end of engine specific
+		
+		MemSet(text_oCNpc_SetTorchAni_jz_now, '90', 6)
+	#/patch
+#/engine
