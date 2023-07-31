@@ -1,0 +1,17 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zNoFadingEvents]
+		// engine specific
+		INT text_zCModel_DoAniEvents_mov_esi_ani = ZenDef(0x00561B22, 0x0057A22A, 0x005763A2, 0x0057B8C2)
+		INT text_zCModel_DoAniEvents_epilogue = ZenDef(0x00561B91, 0x0057B104, 0x00576414, 0x0057B934)
+		
+		INT field_zCModelAniActive_isFadingOut = 0x1C
+		// end of engine specific
+		
+		#assembler [text_zCModel_DoAniEvents_mov_esi_ani]
+			orgcode
+			mov eax, [esi+$field_zCModelAniActive_isFadingOut]
+			test eax, eax
+			jnz $text_zCModel_DoAniEvents_epilogue
+		#/assembler
+	#/patch
+#/engine
