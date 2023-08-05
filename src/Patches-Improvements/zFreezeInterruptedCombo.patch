@@ -1,0 +1,69 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zFreezeInterruptedCombo]
+		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
+		INT text_oCNpc_EV_AttackForward_prologue = ZenDef(0x006AA87E, 0x006DD63E, 0x006F062E, 0x0074F40E)
+		INT text_oCNpc_EV_AttackForward_epilogue = ZenDef(0x006AAF48, 0x006DDD59, 0x006F1372, 0x00750152)
+		INT text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_1 = ZenDef(0x0062799C, 0x0064CA1C, 0x00653BFF, 0x006B0537)
+		INT text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_2 = ZenDef(0x006279B4, 0x0064CA34, 0x00653C17, 0x006B054F)
+		
+		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
+		
+		INT field_oCMsgAttack_hitAni = ZenDef(0x4C, 0x54, 0x4C, 0x4C)
+		INT field_zCModelAniActive_advanceDir = 0x8
+		
+		INT value_hitAni = 0
+		// end of engine specific
+		
+		#assembler [text_oCNpc_EV_AttackForward_prologue]
+			orgcode
+			mov eax, [esp+0x10] ; csg
+			mov eax, [eax+$field_oCMsgAttack_hitAni]
+			mov dword ptr [$value_hitAni], eax
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_AttackForward_epilogue]
+			orgcode
+			test eax, eax
+			jz return
+			
+			mov ecx, [esp] ; model
+			mov edx, dword ptr [$value_hitAni]
+			push eax
+			push edx
+			call $func_zCModel_GetActiveAni
+			test eax, eax
+			jz continue
+			
+			mov dword ptr [eax+$field_zCModelAniActive_advanceDir], 0
+			
+		continue:
+			pop eax
+			
+		return:
+		#/assembler
+		
+		IF engine_version <= 2
+			#assembler [text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_1]
+				mov dword ptr [ebx+$field_zCModelAniActive_advanceDir], 0
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_2]
+				mov dword ptr [ebx+$field_zCModelAniActive_advanceDir], 0
+				orgcode
+			#/assembler
+		ELSE
+			#assembler [text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_1]
+				mov dword ptr [ebp+$field_zCModelAniActive_advanceDir], 0
+				orgcode
+			#/assembler
+			
+			#assembler [text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_2]
+				mov dword ptr [ebp+$field_zCModelAniActive_advanceDir], 0
+				orgcode
+			#/assembler
+		END
+	#/patch
+#/engine
