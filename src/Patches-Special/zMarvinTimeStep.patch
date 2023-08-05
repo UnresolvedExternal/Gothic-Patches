@@ -1,0 +1,6 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zMarvinTimeStep]
+		FLOAT time_step = 1.0 / 25.0 / 2.0
+		MemCopy(GetRefAddress(time_step), ZenDef(0x0066133C, 0x0068D7E9, 0x006A1195, 0x006FEC33) + 6, 4)
+	#/patch
+#/engine
