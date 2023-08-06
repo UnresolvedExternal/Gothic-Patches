@@ -7,6 +7,9 @@
 		INT text_oCNpc_SetWeaponMode2_jz_standing = ZenDef(0x00695EB6, 0x006C7964, 0x006DAB79, 0x007392C4)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_1 = ZenDef(0x006A932E, 0x006DC0E7, 0x006EED1E, 0x0074DA8E)
 		INT text_oCNpc_EV_DrawWeapon2_call_model_GetAniFromAniID_2 = ZenDef(0x006A9351, 0x006DC137, 0x006EED41, 0x0074DAB1)
+		INT text_oCNpc_EV_AttackForward_mov_edi_ptr_edx = ZenDef(0x006AAF70, 0x006DDD38, 0x006F1353, 0x00750133)
+		INT text_oCNpc_EV_AttackForward_mov_edi_ptr_edx_after = text_oCNpc_EV_AttackForward_mov_edi_ptr_edx + 6
+		INT text_oCNpc_EV_AttackForward_epilogue = ZenDef(0x006AAF37, 0x006DDD48, 0x006F136A, 0x0075014A)
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1 = 0x0061077D
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1 = 0x006109F3
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1 = 0x00610A40
@@ -118,6 +121,27 @@
 		INT const_GAME_UP = 3
 		INT const_GAME_DOWN = 4
 		// end of engine specific
+		
+		#assembler [text_oCNpc_EV_AttackForward_mov_edi_ptr_edx]
+			mov edi, [edx]
+			cmp [edi], ecx
+			jne $text_oCNpc_EV_AttackForward_mov_edi_ptr_edx_after
+			
+			xor eax, eax
+			cmp dword ptr [edi+$field_zCModelAniActive_isFadingOut], 0
+			je check_reverse
+			
+			mov eax, 1
+			
+		check_reverse:
+			cmp dword ptr [$engine_version], 2
+			jg return
+			
+			neg eax
+			inc eax
+			
+		return:
+		#/assembler [text_oCNpc_EV_AttackForward_epilogue]
 		
 		HEX @text_oCNpc_SetWeaponMode2_jz_standing = 'EB'
 		
