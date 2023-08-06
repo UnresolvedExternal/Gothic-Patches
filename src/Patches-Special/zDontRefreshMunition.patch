@@ -1,0 +1,12 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zDontRefreshMunition]
+		// engine specific
+		INT text_oCNpc_RefreshNpc_call_GetNumItemsInCategory = ZenDef(0x0069E69C, 0x006D0A6D, 0x006E38C2, 0x007422D2)
+		// end of engine specific
+		
+		#assembler [text_oCNpc_RefreshNpc_call_GetNumItemsInCategory]
+			orgcode
+			xor eax, eax
+		#/assembler
+	#/patch
+#/engine
