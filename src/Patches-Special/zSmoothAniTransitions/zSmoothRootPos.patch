@@ -1,0 +1,158 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zSmoothRootPos]
+		// engine specific
+		INT text_zCModel_AdvanceAnis_before_vobTrans_aniTransScale = ZenDef(0x00563A65, 0x0057C282, 0x00578461, 0x0057D983)
+		
+		INT func_Alg_Prod = ZenDef(0x00503760, 0x005172B0, 0x005105A0, 0x00513370)
+		
+		INT field_zCModel_nodeList_parray = ZenDef(0x64, 0x64, 0x70, 0x70)
+		INT field_zCModel_nodeList_numInList = field_zCModel_nodeList_parray + 8
+		INT field_zCModel_flags = ZenDef(0x1CC, 0x1CC, 0x1F8, 0x1F8)
+		INT field_zCModel_rootPosLocal_x = ZenDef(0x134, 0x134, 0x144, 0x144)
+		INT field_zCModel_rootPosLocal_y = field_zCModel_rootPosLocal_x + 4
+		INT field_zCModel_rootPosLocal_z = field_zCModel_rootPosLocal_x + 8
+		INT field_zCModel_modelScale = ZenDef(0x11C, 0x11C, 0x12C, 0x12C)
+		INT field_zCModelAniActive_transWeight = 0x7C
+		INT field_zCModelAniActive_thisPos_x = 0x3C
+		INT field_zCModelAniActive_thisPos_y = field_zCModelAniActive_thisPos_x + 4
+		INT field_zCModelAniActive_thisPos_z = field_zCModelAniActive_thisPos_x + 8
+		INT field_zCModelNodeInst_parentNode = 0x0
+		INT field_zCModelNodeInst_numNodeAnis = 0x18C
+		INT field_zCModelNodeInst_nodeAniList = 0xCC
+		INT field_zCModelNodeInst_zTNodeAni_modelAni = 0x0
+		
+		INT sizeof_zCModelNodeInst_zTNodeAni = 0x20
+		
+		FLOAT value_epsilon = 0.01
+		// end of engine specific
+		
+		#assembler [text_zCModel_AdvanceAnis_before_vobTrans_aniTransScale]
+			push edi ; esp-4
+			xor edi, edi
+			
+		nodes_loop:
+			mov ecx, [ebx+$field_zCModel_nodeList_numInList]
+			cmp edi, ecx
+			jge return
+			
+			mov ecx, [ebx+$field_zCModel_nodeList_parray]
+			mov edx, edi
+			shl edx, 2
+			add edx, ecx
+			mov edx, [edx]
+			mov ecx, [edx] ; parentNode
+			test ecx, ecx
+			jnz nodes_loop_continue
+			
+			push edi ; esp-8
+			xor edi, edi
+			fldz ; esp-8, fp=totalWeight
+			
+		anis_weights_loop:
+			mov ecx, [edx+$field_zCModelNodeInst_numNodeAnis]
+			cmp edi, ecx
+			jge anis_weights_loop_end
+			
+			mov ecx, edi
+			imul ecx, $sizeof_zCModelNodeInst_zTNodeAni
+			lea eax, [edx+$field_zCModelNodeInst_nodeAniList]
+			add ecx, eax
+			mov ecx, [ecx] ; modelAni
+			fld dword ptr [ecx+$field_zCModelAniActive_transWeight] ; esp-8, fp=transWeight, totalWeight
+			fldz ; esp-8, fp=0.0, transWeight, totalWeight
+			fcomp st1 ; esp-8, fp=transWeight, totalWeight
+			fnstsw ax
+			test ah, 5
+			jp anis_weights_loop_continue
+			
+			fadd st1, st0
+			
+		anis_weights_loop_continue:
+			fstp st0 ; esp-8, fp=totalWeight
+			inc edi
+			jmp anis_weights_loop
+			
+		anis_weights_loop_end:
+			pop edi ; esp-4, fp=totalWeight
+			fld dword ptr [$value_epsilon] ; esp-4, fp=0.01, totalWeight
+			fcomp st1 ; esp-4, fp=totalWeight
+			fnstsw ax
+			test ah, 69
+			jz return_fstp
+			
+			fldz ; esp-4, fp=0.0, totalWeight
+			fst dword ptr [ebx+$field_zCModel_rootPosLocal_x]
+			fst dword ptr [ebx+$field_zCModel_rootPosLocal_y]
+			fstp dword ptr [ebx+$field_zCModel_rootPosLocal_z] ; esp-4, fp=totalWeight
+			push edi ; esp-8, fp=totalWeight
+			xor edi, edi
+			
+		anis_root_loop:
+			mov ecx, [edx+$field_zCModelNodeInst_numNodeAnis]
+			cmp edi, ecx
+			jge anis_root_loop_end
+			
+			mov ecx, edi
+			imul ecx, $sizeof_zCModelNodeInst_zTNodeAni
+			lea eax, [edx+$field_zCModelNodeInst_nodeAniList]
+			add ecx, eax
+			mov ecx, [ecx] ; modelAni
+			fld dword ptr [ecx+$field_zCModelAniActive_transWeight] ; esp-8, fp=transWeight, totalWeight
+			fldz ; esp-8, fp=0.0, transWeight, totalWeight
+			fcomp st1 ; esp-8, fp=transWeight, totalWeight
+			fnstsw ax
+			test ah, 5
+			jp anis_root_loop_continue
+			
+			fdiv st0, st1 ; esp-8, fp=transWeight%, totalWeight
+			fld dword ptr [ecx+$field_zCModelAniActive_thisPos_x] ; esp-8, fp=thisPos[x], transWeight%, totalWeight
+			fmul st0, st1 ; esp-8, fp=thisPos[x]*transWeight%, transWeight%, totalWeight
+			fld dword ptr [ebx+$field_zCModel_rootPosLocal_x] ; esp-8, fp=rootPosLocal[x], thisPos[x]*transWeight%, transWeight%, totalWeight
+			faddp ; esp-8, fp=rootPosLocal[x]+thisPos[x]*transWeight%, transWeight%, totalWeight
+			fstp dword ptr [ebx+$field_zCModel_rootPosLocal_x] ; esp-8, fp=transWeight%, totalWeight
+			fld dword ptr [ecx+$field_zCModelAniActive_thisPos_y]
+			fmul st0, st1
+			fld dword ptr [ebx+$field_zCModel_rootPosLocal_y]
+			faddp
+			fstp dword ptr [ebx+$field_zCModel_rootPosLocal_y]
+			fld dword ptr [ecx+$field_zCModelAniActive_thisPos_z]
+			fmul st0, st1
+			fld dword ptr [ebx+$field_zCModel_rootPosLocal_z]
+			faddp
+			fstp dword ptr [ebx+$field_zCModel_rootPosLocal_z]
+			
+		anis_root_loop_continue:
+			fstp st0 ; esp-8, fp=totalWeight
+			inc edi
+			jmp anis_root_loop
+			
+		anis_root_loop_end:
+			mov al, [ebx+$field_zCModel_flags]
+			test al, 0x10 ; modelScaleOn
+			jz after_model_scale
+			
+			lea eax, [ebx+$field_zCModel_modelScale]
+			push eax
+			lea eax, [ebx+$field_zCModel_rootPosLocal_x]
+			push eax
+			push eax
+			call $func_Alg_Prod
+			add esp, 12
+			
+		after_model_scale:
+			pop edi ; esp-4, fp=totalWeight
+			jmp return_fstp
+			
+		nodes_loop_continue:
+			inc edi
+			jmp nodes_loop
+			
+		return_fstp:
+			fstp st0 ; esp-4
+			
+		return:
+			pop edi ; esp+0
+			orgcode
+		#/assembler
+	#/patch
+#/engine
