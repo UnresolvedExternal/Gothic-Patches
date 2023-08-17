@@ -1,0 +1,40 @@
+#engine [G1, G1A]
+	#patch [zMagicMessageNameFix]
+		// engine specific
+		INT text_oCMsgMagic_MD_GetSubTypeString_case_7_str = ZenDef(0x006C43D3, 0x006F9863, 0x00000000, 0x00000000)
+		INT text_oCMsgMagic_MD_GetSubTypeString_case_8_str = ZenDef(0x006C43DF, 0x006F986F, 0x00000000, 0x00000000)
+		INT text_oCMsgMagic_MD_GetSubTypeString_push_default = ZenDef(0x006C4402, 0x006F9892, 0x00000000, 0x00000000)
+		INT text_oCMsgMagic_MD_GetSubTypeString_push_default_after = text_oCMsgMagic_MD_GetSubTypeString_push_default + 5
+		
+		INT str_EV_READY = ZenDef(0x008507A0, 0x00896AB0, 0x00000000, 0x00000000)
+		INT str_EV_UNREADY = ZenDef(0x00850794, 0x00896AA4, 0x00000000, 0x00000000)
+		INT str_EV_SETFRONTSPELL = CreateMemString("EV_SETFRONTSPELL") + 8
+		INT str_EV_CASTSPELL = CreateMemString("EV_CASTSPELL") + 8
+		// end of engine specific
+		
+		INT @text_oCMsgMagic_MD_GetSubTypeString_case_7_str = INT @str_EV_SETFRONTSPELL
+		INT @text_oCMsgMagic_MD_GetSubTypeString_case_8_str = INT @str_EV_CASTSPELL
+		
+		#assembler [text_oCMsgMagic_MD_GetSubTypeString_push_default]
+			mov eax, [esp+0x18] ; subType
+			cmp eax, 9
+			je ev_ready
+			
+			cmp eax, 10
+			jne continue
+			
+		ev_unready:
+			mov eax, $str_EV_UNREADY
+			push eax
+			jmp $text_oCMsgMagic_MD_GetSubTypeString_push_default_after
+			
+		ev_ready:
+			mov eax, $str_EV_READY
+			push eax
+			jmp $text_oCMsgMagic_MD_GetSubTypeString_push_default_after
+			
+		continue:
+			orgcode
+		#/assembler
+	#/patch
+#/engine
