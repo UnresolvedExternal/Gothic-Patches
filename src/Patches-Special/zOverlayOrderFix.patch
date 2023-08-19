@@ -9,6 +9,7 @@
 		INT text_oCNpc_RemoveOverlay_reorder_end = ZenDef(0x0068B148, 0x006BB728, 0x006CF4C8, 0x0072D6C8)
 		
 		INT func_zCModel_ApplyModelProtoOverlay = ZenDef(0x0055EFB0, 0x00577340, 0x00573540, 0x005787F0)
+		INT func_zSTRING_zSTRING = ZenDef(0x00402B30, 0x00402F90, 0x00402AF0, 0x00402AF0)
 		INT func_zSTRING_operator_assign = ZenDef(0x0057E0C0, 0x005988F0, 0x00597950, 0x0059CEB0)
 		
 		INT field_oCNpc_activeOverlays_vector = ZenDef(0x960, 0x964, 0x894, 0x928)
@@ -18,7 +19,7 @@
 		
 		INT sizeof_zSTRING = 0x14
 		
-		INT buffer = CreateMemString("")
+		HEX buffer = '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'
 		INT num_overlays = 0
 		// end of engine specific
 		
@@ -102,6 +103,14 @@
 			push eax
 			push edx
 			
+			mov ecx, dword ptr [$buffer]
+			test ecx, ecx
+			jnz skip_buffer_init
+			
+			mov ecx, $buffer
+			call $func_zSTRING_zSTRING
+			
+		skip_buffer_init:
 			push eax
 			mov ecx, $buffer
 			call $func_zSTRING_operator_assign
