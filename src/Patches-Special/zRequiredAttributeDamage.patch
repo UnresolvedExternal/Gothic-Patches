@@ -1,0 +1,162 @@
+#engine [G2, G2A]
+	#patch [zRequiredAttributeDamage]
+		// engine specific
+		INT text_oCNpc_OnDamage_Hit_call__ftol_blunt = ZenDef(0x00000000, 0x00000000, 0x00781C36, 0x0066AEF5)
+		INT text_oCNpc_OnDamage_Hit_call__ftol_edge = ZenDef(0x00000000, 0x00000000, 0x00781E2A, 0x0066B0E9)
+		INT text_oCNpc_OnDamage_Hit_call__ftol_point = ZenDef(0x00000000, 0x00000000, 0x00782028, 0x0066B2E7)
+		
+		INT func_oCNpc_GetWeapon = ZenDef(0x006943F0, 0x006C5C30, 0x006D9060, 0x007377A0)
+		
+		INT field_oCNpc_oSDamageDescriptor_enuModeWeapon = ZenDef(0x24, 0x24, 0x24, 0x28)
+		INT field_oCNpc_oSDamageDescriptor_pNpcAttacker = 0x8
+		INT field_oCNpc_oSDamageDescriptor_pItemWeapon = 0x14
+		INT field_oCItem_cond_atr = ZenDef(0x194, 0x194, 0x1B4, 0x1B4)
+		INT field_oCItem_cond_value = ZenDef(0x1A0, 0x1A0, 0x1C0, 0x1C0)
+		
+		INT var_strength = ZenDef(0x00000000, 0x00000000, 0x10, 0x10)
+		INT var_dexterity = ZenDef(0x00000000, 0x00000000, 0x100, 0x100)
+		
+		INT const_oETypeWeapon_Range = 4
+		// end of engine specific
+		
+		#assembler [func_oCNpc_oSDamageDescriptor_ResolveAttribute]
+			push esi
+			mov esi, ecx
+			
+			mov eax, [esi+$field_oCNpc_oSDamageDescriptor_enuModeWeapon]
+			cmp eax, $const_oETypeWeapon_Range
+			jne use_pItemWeapon
+			
+			mov ecx, [esi+$field_oCNpc_oSDamageDescriptor_pNpcAttacker]
+			test ecx, ecx
+			jz use_pItemWeapon
+			
+			call $func_oCNpc_GetWeapon
+			mov esi, eax
+			jmp body
+			
+		use_pItemWeapon:
+			mov esi, [esi+$field_oCNpc_oSDamageDescriptor_pItemWeapon]
+			
+		body:
+			xor eax, eax
+			xor edx, edx
+			
+			test esi, esi
+			jz return
+			
+		test_0:
+			mov ecx, [esi+$field_oCItem_cond_atr]
+			cmp ecx, 4
+			jl test_1
+			
+			cmp ecx, 5
+			jg test_1
+			
+			mov ecx, [esi+$field_oCItem_cond_value]
+			cmp ecx, edx
+			jle test_1
+			
+			mov edx, ecx
+			mov eax, [esi+$field_oCItem_cond_atr]
+			
+		test_1:
+			add esi, 4
+			
+			mov ecx, [esi+$field_oCItem_cond_atr]
+			cmp ecx, 4
+			jl test_2
+			
+			cmp ecx, 5
+			jg test_2
+			
+			mov ecx, [esi+$field_oCItem_cond_value]
+			cmp ecx, edx
+			jle test_2
+			
+			mov edx, ecx
+			mov eax, [esi+$field_oCItem_cond_atr]
+		
+		test_2:
+			add esi, 4
+			
+			mov ecx, [esi+$field_oCItem_cond_atr]
+			cmp ecx, 4
+			jl return
+			
+			cmp ecx, 5
+			jg return
+			
+			mov ecx, [esi+$field_oCItem_cond_value]
+			cmp ecx, edx
+			jle return
+			
+			mov edx, ecx
+			mov eax, [esi+$field_oCItem_cond_atr]
+			
+		return:
+			pop esi
+			ret
+		#/assembler
+		
+		#assembler [text_oCNpc_OnDamage_Hit_call__ftol_blunt]
+			mov ecx, edi
+			call $func_oCNpc_oSDamageDescriptor_ResolveAttribute
+			test eax, eax
+			jz continue
+			
+			fstp st0
+			cmp eax, 4
+			je strength
+			
+			fld dword ptr [esp+$var_dexterity]
+			jmp continue
+			
+		strength:
+			fld dword ptr [esp+$var_strength]
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_OnDamage_Hit_call__ftol_edge]
+			mov ecx, edi
+			call $func_oCNpc_oSDamageDescriptor_ResolveAttribute
+			test eax, eax
+			jz continue
+			
+			fstp st0
+			cmp eax, 4
+			je strength
+			
+			fld dword ptr [esp+$var_dexterity]
+			jmp continue
+			
+		strength:
+			fld dword ptr [esp+$var_strength]
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_OnDamage_Hit_call__ftol_point]
+			mov ecx, edi
+			call $func_oCNpc_oSDamageDescriptor_ResolveAttribute
+			test eax, eax
+			jz continue
+			
+			fstp st0
+			cmp eax, 4
+			je strength
+			
+			fld dword ptr [esp+$var_dexterity]
+			jmp continue
+			
+		strength:
+			fld dword ptr [esp+$var_strength]
+			
+		continue:
+			orgcode
+		#/assembler
+	#/patch
+#/engine
