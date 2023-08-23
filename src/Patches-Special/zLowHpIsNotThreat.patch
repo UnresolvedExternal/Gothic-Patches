@@ -1,0 +1,9 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zLowHpIsNotThreat]
+		// engine specific
+		INT text_oCAIHuman_GetEnemyThreat_hp = ZenDef(0x00610F52, 0x00633CB8, 0x0063A517, 0x00696DA7) + 2
+		// end of engine specific
+		
+		HEX @text_oCAIHuman_GetEnemyThreat_hp = '00'
+	#/patch
+#/engine
