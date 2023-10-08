@@ -16,6 +16,7 @@
 			mov eax, [esp+0x104] ; csg
 			mov eax, [eax+$field_oCMsgManipulate_targetState]
 			mov [esi+$field_oCNpc_interactItemTargetState], eax
+			orgcode
 		#/assembler
 	#/patch
 #/engine
