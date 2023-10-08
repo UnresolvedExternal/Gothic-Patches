@@ -18,7 +18,6 @@
 		INT field_zCListSort_next = 8
 		
 		INT value_Mob_CreateItems_mob = 0
-		INT value_Mob_CreateItems_item = 0
 		// end of engine specific
 		
 		#assembler [func_zCListSort_InsertItem]
