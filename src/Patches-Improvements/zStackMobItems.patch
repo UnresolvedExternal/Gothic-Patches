@@ -1,0 +1,103 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zStackMobItems]
+		// engine specific
+		INT text_oCMobContainer_Insert_call_containList_Insert = ZenDef(0x00683E8C, 0x006B3A0C, 0x006C7F3C, 0x00725FCC)
+		INT text_oCMobContainer_Insert_epilogue = ZenDef(0x00683EAA, 0x006B3A2A, 0x006C7F5A, 0x00725FEA)
+		INT text_Mob_CreateItems_call_Insert = ZenDef(0x0065C929, 0x0068728B, 0x00699575, 0x006F6945)
+		INT text_Mob_CreateItems_single_item = ZenDef(0x0065C93A, 0x0068729C, 0x0069958A, 0x006F695A)
+		INT text_Mob_CreateItems_multi_item = ZenDef(0x0065C95F, 0x006872C1, 0x00699838, 0x006F6C08)
+		
+		INT func_oCItem_MultiSlot = ZenDef(0x00671F30, 0x0069F890, 0x006B4870, 0x007125A0)
+		INT func_zCObject_Release = ZenDef(0x0042AC30, 0x0042DB30, 0x0040C310, 0x0040C310)
+		
+		INT vfunc_oCMobContainer_Insert = ZenDef(0x130, 0x140, 0x140, 0x140)
+		
+		INT field_oCItem_instanz = ZenDef(0x2E8, 0x2E8, 0x31C, 0x330)
+		INT field_oCItem_amount = ZenDef(0x2E4, 0x2E4, 0x318, 0x32C)
+		INT field_zCListSort_data = 4
+		INT field_zCListSort_next = 8
+		
+		INT value_Mob_CreateItems_mob = 0
+		INT value_Mob_CreateItems_item = 0
+		// end of engine specific
+		
+		#assembler [func_zCListSort_InsertItem]
+			push esi
+			mov esi, ecx
+			
+			mov ecx, [esp+8]
+			call $func_oCItem_MultiSlot
+			test eax, eax
+			jz return_false
+			
+			mov ecx, [esi+$field_zCListSort_next]
+			test ecx, ecx
+			jz return_false
+			
+			mov eax, [esp+8]
+			mov eax, [eax+$field_oCItem_instanz]
+			
+		loop:
+			mov edx, [ecx+$field_zCListSort_data]
+			cmp [edx+$field_oCItem_instanz], eax
+			jne continue
+			
+			mov eax, [esp+8]
+			mov eax, [eax+$field_oCItem_amount]
+			mov ecx, [edx+$field_oCItem_amount]
+			add ecx, eax
+			mov [edx+$field_oCItem_amount], ecx
+			jmp return_true
+			
+		continue:
+			mov ecx, [ecx+$field_zCListSort_next]
+			test ecx, ecx
+			jz return_false
+			jmp loop
+			
+		return_true:
+			mov eax, 1
+			jmp epilogue
+			
+		return_false:
+			xor eax, eax
+			
+		epilogue:
+			mov ecx, esi
+			pop esi
+			ret 4
+		#/assembler
+		
+		#assembler [text_oCMobContainer_Insert_call_containList_Insert]
+			call $func_zCListSort_InsertItem
+			test eax, eax
+			jnz $text_oCMobContainer_Insert_epilogue
+			
+			push esi
+			orgcode
+		#/assembler
+		
+		#assembler [text_Mob_CreateItems_call_Insert]
+			add esp, 4
+			mov dword ptr [$value_Mob_CreateItems_mob], ecx
+		#/assembler
+		
+		#assembler [text_Mob_CreateItems_single_item]
+			push esi
+			mov ecx, dword ptr [$value_Mob_CreateItems_mob]
+			mov edx, [ecx]
+			call [edx+$vfunc_oCMobContainer_Insert]
+			orgcode
+		#/assembler
+		
+		#assembler [text_Mob_CreateItems_multi_item]
+			orgcode
+			push esi
+			mov ecx, dword ptr [$value_Mob_CreateItems_mob]
+			mov edx, [ecx]
+			call [edx+$vfunc_oCMobContainer_Insert]
+			mov ecx, esi
+			call $func_zCObject_Release
+		#/assembler
+	#/patch
+#/engine
