@@ -1,0 +1,23 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zProgressBarPos]
+		// engine specific
+		INT text_oCGame_OpenLoadscreen_push_bar_pos_new_game = ZenDef(0x00638676, 0x0065EB66, 0x00665D2B, 0x006C282B)
+		INT text_oCGame_OpenLoadscreen_push_bar_pos_load_game = ZenDef(0x00638837, 0x0065ED4F, 0x00665ECC, 0x006C29CC)
+		// end of engine specific
+		
+		INT X1 = 2000
+		INT Y1 = 3000
+		INT X2 = 6000
+		INT Y2 = 4000
+		
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_new_game + 1) = Y2
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_new_game + 6) = X2
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_new_game + 11) = Y1
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_new_game + 16) = X1
+		
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_load_game + 1) = Y2
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_load_game + 6) = X2
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_load_game + 11) = Y1
+		INT @(text_oCGame_OpenLoadscreen_push_bar_pos_load_game + 16) = X1
+	#/patch
+#/engine
