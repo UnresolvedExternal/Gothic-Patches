@@ -1,0 +1,19 @@
+#engine [G2, G2A]
+	#patch [zUnlockMotionFactor]
+		// engine specific
+		INT text_oCNpc_Turn_fdiv_motionFactor = ZenDef(0x00000000, 0x00000000, 0x00799B4E, 0x0068304E)
+		INT text_oCAIHuman_PC_Dive_fdiv_motionFactor_1 = ZenDef(0x00000000, 0x00000000, 0x0063D4A8, 0x00699CF8)
+		INT text_oCAIHuman_PC_Dive_fdiv_motionFactor_2 = ZenDef(0x00000000, 0x00000000, 0x0063D4DA, 0x00699D2A)
+		INT text_oCAIHuman_PC_Dive_fdiv_motionFactor_3 = ZenDef(0x00000000, 0x00000000, 0x0063D54D, 0x00699D9D)
+		INT text_oCMobInter_StartStateChange_fdiv_motionFactor = ZenDef(0x00000000, 0x00000000, 0x006C1ED3, 0x0071FF63)
+		INT text_oCAniCtrl_Human_Turn_fdiv_motionFactor = ZenDef(0x00000000, 0x00000000, 0x00651FEC, 0x006AE86C)
+		// end of engine specific
+		
+		MemSet(text_oCNpc_Turn_fdiv_motionFactor, '90', 6)
+		MemSet(text_oCAIHuman_PC_Dive_fdiv_motionFactor_1, '90', 6)
+		MemSet(text_oCAIHuman_PC_Dive_fdiv_motionFactor_2, '90', 6)
+		MemSet(text_oCAIHuman_PC_Dive_fdiv_motionFactor_3, '90', 6)
+		MemSet(text_oCMobInter_StartStateChange_fdiv_motionFactor, '90', 6)
+		MemSet(text_oCAniCtrl_Human_Turn_fdiv_motionFactor, '90', 4)
+	#/patch
+#/engine
