@@ -1,0 +1,27 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zPreserveShowVisual]
+		// engine specific
+		INT text_oCNpc_Archive_call_SetVisual_args_1 = ZenDef(0x006A275B, 0x006D4FA9, 0x006E7A8B, 0x0074652B)
+		INT text_oCNpc_Archive_call_SetVisual_args_2 = ZenDef(0x006A2773, 0x006D4FC1, 0x006E7AA3, 0x00746543)
+		
+		INT field_zCVob_bitflags = ZenDef(0xE0, 0xE0, 0x100, 0x100) + 4
+		
+		INT value_flags = 0
+		// end of engine specific
+		
+		#assembler [text_oCNpc_Archive_call_SetVisual_args_1]
+			mov cl, [ebx+$field_zCVob_bitflags]
+			mov [$value_flags], cl
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_Archive_call_SetVisual_args_2]
+			orgcode
+			mov cl, [$value_flags]
+			or cl, 0xFE
+			mov dl, [ebx+$field_zCVob_bitflags]
+			and dl, cl
+			mov [ebx+$field_zCVob_bitflags], dl
+		#/assembler
+	#/patch
+#/engine
