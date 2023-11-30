@@ -1,0 +1,26 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zRussianDaySuffix]
+		// engine specific
+		INT text_oCSavegameInfo_GetGameTime_hyphen_address_1 = ZenDef(0x004350FC, 0x0043932B, 0x00438019, 0x00438519) + 1
+		INT text_oCSavegameInfo_GetGameTime_hyphen_address_2 = ZenDef(0x00435107, 0x00439336, 0x00438024, 0x00438524) + 1
+		
+		INT Language_Other = 0
+        INT Language_Rus = 1
+        INT Language_Eng = 2
+        INT Language_Deu = 3
+        INT Language_Pol = 4
+        INT Language_Rou = 5
+        INT Language_Ita = 6
+        INT Language_Cze = 7
+        INT Language_Esp = 8
+		
+        INT Union_Language = GetLanguage()
+		// end of engine specific
+		
+		IF Union_Language == Language_Rus
+			INT str_day_suffix = CreateMemString("-й день ") + 8
+			INT @text_oCSavegameInfo_GetGameTime_hyphen_address_1 = INT @str_day_suffix
+			INT @text_oCSavegameInfo_GetGameTime_hyphen_address_2 = INT @str_day_suffix
+		END
+	#/patch
+#/engine

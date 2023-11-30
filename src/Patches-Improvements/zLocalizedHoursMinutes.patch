@@ -1,0 +1,37 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zLocalizedHoursMinutes]
+		// engine specific
+		INT text_oCMenuSavegame_HandleSlotChange_hours_address = ZenDef(0x0042C4D5, 0x0042F5B7, 0x0042E768, 0x0042EA88) + 1
+		INT text_oCMenuSavegame_HandleSlotChange_minutes_address = ZenDef(0x0042C501, 0x0042F5E3, 0x0042E79F, 0x0042EABF) + 1
+		
+		INT Language_Other = 0
+        INT Language_Rus = 1
+        INT Language_Eng = 2
+        INT Language_Deu = 3
+        INT Language_Pol = 4
+        INT Language_Rou = 5
+        INT Language_Ita = 6
+        INT Language_Cze = 7
+        INT Language_Esp = 8
+		
+        INT Union_Language = GetLanguage()
+		// end of engine specific
+		
+		IF Union_Language == Language_Rus
+			INT str_hours = CreateMemString("ч ") + 8
+			INT str_minutes = CreateMemString("мин") + 8
+			INT @text_oCMenuSavegame_HandleSlotChange_hours_address = INT @str_hours
+			INT @text_oCMenuSavegame_HandleSlotChange_minutes_address = INT @str_minutes
+		END
+		
+		IF Union_Language == Language_Pol
+			INT str_hours = CreateMemString("g ") + 8
+			INT @text_oCMenuSavegame_HandleSlotChange_hours_address = INT @str_hours
+		END
+		
+		IF Union_Language == Language_Rou || Union_Language == Language_Ita
+			INT str_hours = CreateMemString("o ") + 8
+			INT @text_oCMenuSavegame_HandleSlotChange_hours_address = INT @str_hours
+		END
+	#/patch
+#/engine
