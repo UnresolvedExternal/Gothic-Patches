@@ -1,0 +1,32 @@
+#engine [G1, G1A]
+	#patch [zEndTransformPreserveHeading]
+		// engine specific
+		INT text_oCSpell_EndTimedEffect_call_SetHeadingYWorld = ZenDef(0x0047F6C4, 0x0048A26B, 0x00000000, 0x00000000)
+		
+		INT func_zCVob_GetAtVectorWorld = ZenDef(0x0051B3E0, 0x00514C80, 0x0052AD60, 0x0052DCB0)
+		INT func_zCVob_SetHeadingAtWorld = ZenDef(0x005EF640, 0x006100B0, 0x00615480, 0x0061CBC0)
+		INT func_zCVob_ResetXZRotationsWorld = ZenDef(0x005EEB40, 0x0060F4D0, 0x00614980, 0x0061C090)
+		
+		INT field_oCSpell_spellTargetNpc = 0x3C
+		INT field_oCSpell_saveNpc = 0x40
+		
+		INT sizeof_zVEC3 = 12
+		// end of engine specific
+		
+		#assembler [text_oCSpell_EndTimedEffect_call_SetHeadingYWorld]
+			add esp, 4
+			sub esp, $sizeof_zVEC3
+			mov eax, esp
+			push eax
+			mov ecx, [ebp+$field_oCSpell_spellTargetNpc]
+			call $func_zCVob_GetAtVectorWorld
+			mov eax, esp
+			push eax
+			mov ecx, [ebp+$field_oCSpell_saveNpc]
+			call $func_zCVob_SetHeadingAtWorld
+			add esp, $sizeof_zVEC3
+			mov ecx, [ebp+$field_oCSpell_saveNpc]
+			call $func_zCVob_ResetXZRotationsWorld
+		#/assembler
+	#/patch
+#/engine
