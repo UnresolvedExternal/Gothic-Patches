@@ -1,0 +1,20 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zRMBForward]
+		// engine specific
+		INT text_oCAIHuman__WalkCycle_mov_ecx_zinput = ZenDef(0x00614CD4, 0x00637AF7, 0x0063E713, 0x0069AF60)
+		INT text_oCAIHuman__WalkCycle_forward_key_success = ZenDef(0x00614CEA, 0x00637B0D, 0x0063E729, 0x0069AF72)
+		
+		INT vfunc_zCInput_GetMouseButtonPressedRight = 23 * 4
+		// end of engine specific
+		
+		#assembler [text_oCAIHuman__WalkCycle_mov_ecx_zinput]
+			orgcode
+			push ecx
+			mov edx, [ecx]
+			call [edx+$vfunc_zCInput_GetMouseButtonPressedRight]
+			test eax, eax
+			pop ecx
+			jnz $text_oCAIHuman__WalkCycle_forward_key_success
+		#/assembler
+	#/patch
+#/engine
