@@ -1,0 +1,18 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zCutBinSafeHash]
+		// engine specific
+		INT text_zCArchiverBinSafe_ReadEntryASCII_call_RestoreBuffer_hashValue = ZenDef(0x00510367, 0x0052555E, 0x0051D90F, 0x005206DF)
+		
+		INT value_zCArchiverBinSafe_ReadEntryASCII_hashValue_ptr = 0
+		// end of engine specific
+		
+		#assembler [text_zCArchiverBinSafe_ReadEntryASCII_call_RestoreBuffer_hashValue]
+			mov [$value_zCArchiverBinSafe_ReadEntryASCII_hashValue_ptr], edx
+			orgcode
+			mov edx, [$value_zCArchiverBinSafe_ReadEntryASCII_hashValue_ptr]
+			mov eax, [edx]
+			and eax, 0xFFFF
+			mov [edx], eax
+		#/assembler
+	#/patch
+#/engine
