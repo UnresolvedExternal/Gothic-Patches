@@ -1,0 +1,27 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zCollectFocusDelay]
+		// engine specific
+		INT text_oCNpc_CollectFocusVob_fcomp_delay_G1 = ZenDef(0x00690D7F, 0x006C2220, 0x00000000, 0x00000000)
+		INT text_oCNpc_CollectFocusVob_fsub_delay_G1 = ZenDef(0x00690DB2, 0x006C2258, 0x00000000, 0x00000000)
+		INT text_oCNpc_CollectFocusVob_delay = ZenDef(0x00000000, 0x00000000, 0x006D5418, 0x00733A38) + 4;
+		INT text_oCNpc_CollectFocusVob_delay_fight = ZenDef(0x00000000, 0x00000000, 0x006D5450, 0x00733A70) + 4;
+		
+		FLOAT value_new_delay_g1 = 250.0
+		INT value_new_delay_g2 = 250
+		INT value_new_delay_fight_g2 = 100
+		// end of engine specific
+		
+		IF ZenDef(1, 2, 3, 4) <= 2
+			#assembler [text_oCNpc_CollectFocusVob_fcomp_delay_G1]
+				fcomp dword ptr [$value_new_delay_g1]
+			#/assembler
+			
+			#assembler [text_oCNpc_CollectFocusVob_fsub_delay_G1]
+				fsub dword ptr [$value_new_delay_g1]
+			#/assembler
+		ELSE
+			INT @text_oCNpc_CollectFocusVob_delay = value_new_delay_g2
+			INT @text_oCNpc_CollectFocusVob_delay_fight = value_new_delay_fight_g2
+		END
+	#/patch
+#/engine
