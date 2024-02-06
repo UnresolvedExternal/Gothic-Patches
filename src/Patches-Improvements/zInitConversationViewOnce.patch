@@ -1,0 +1,19 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zInitConversationViewOnce]
+		// engine specific
+		INT text_oCNpc_EV_PlaySound_set_f_yes_GAME_VIEW_AMBIENT = ZenDef(0x006B282B, 0x006E6BDC, 0x006F96EB, 0x0075851C)
+		INT text_oCNpc_EV_PlaySound_jnz_IsInUse = ZenDef(0x006B283A, 0x006E6BEB, 0x006F96FA, 0x0075852B)
+		
+		INT field_oCMsgConversation_f_yes = ZenDef(0x94, 0x9C, 0x94, 0x94)
+		
+		INT const_GAME_VIEW_AMBIENT = 2
+		// end of engine specific
+		
+		MemSet(text_oCNpc_EV_PlaySound_set_f_yes_GAME_VIEW_AMBIENT, '90', 10)
+		
+		#assembler [text_oCNpc_EV_PlaySound_jnz_IsInUse]
+			orgcode
+			mov dword ptr [ebx+$field_oCMsgConversation_f_yes], $const_GAME_VIEW_AMBIENT
+		#/assembler
+	#/patch
+#/engine

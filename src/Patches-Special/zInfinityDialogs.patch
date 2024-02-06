@@ -1,0 +1,96 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zInfinityDialogs]
+		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
+		INT text_oCNpc_EV_PlaySound_need_store_csg = ZenDef(0x006B3141, 0x006E76FB, 0x006FA07F, 0x00758DB3)
+		INT text_oCNpc_EV_PlaySound_test_f_no = ZenDef(0x006B3159, 0x006E7712, 0x006FA097, 0x00758DC5)
+		INT text_oCNpc_EV_PlaySound_test_f_no_end = text_oCNpc_EV_PlaySound_test_f_no + 5
+		INT text_oCNpc_EV_PlaySound_push_color_1 = ZenDef(0x006B2D5B, 0x006E7275, 0x006F9C77, 0x00758AA7)
+		INT text_oCNpc_EV_PlaySound_push_color_2 = ZenDef(0x006B2DD8, 0x006E7306, 0x006F9CFC, 0x00758B1D)
+		
+		INT field_oCMsgConversation_f_yes = ZenDef(0x94, 0x9C, 0x94, 0x94)
+		
+		INT const_GAME_VIEW_CONVERSATION = 1
+		FLOAT const_float_big = 1000000000.0
+		
+		INT value_EV_PlaySound_csg = 0
+		// end of engine specific
+		
+		#assembler [text_oCNpc_EV_PlaySound_need_store_csg]
+			mov dword ptr [$value_EV_PlaySound_csg], ebx
+			orgcode
+		#/assembler
+		
+		IF engine_version == 1
+		
+			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
+				push ebx
+				mov ebx, dword ptr [$value_EV_PlaySound_csg]
+				mov edx, [ebx+$field_oCMsgConversation_f_yes]
+				pop ebx
+				cmp edx, $const_GAME_VIEW_CONVERSATION
+				jne continue
+				
+				xor edx, edx
+				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
+				
+			continue:
+				xor edx, edx
+				orgcode
+			#/assembler
+		
+		END
+		
+		IF engine_version == 2
+		
+			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
+				push ebx
+				mov ebx, dword ptr [$value_EV_PlaySound_csg]
+				mov ecx, [ebx+$field_oCMsgConversation_f_yes]
+				pop ebx
+				cmp ecx, $const_GAME_VIEW_CONVERSATION
+				jne continue
+				
+				xor ecx, ecx
+				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
+				
+			continue:
+				xor ecx, ecx
+				orgcode
+			#/assembler
+		
+		END
+		
+		IF engine_version >= 3
+		
+			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
+				push ebx
+				mov ebx, dword ptr [$value_EV_PlaySound_csg]
+				mov edx, [ebx+$field_oCMsgConversation_f_yes]
+				pop ebx
+				cmp edx, $const_GAME_VIEW_CONVERSATION
+				jne continue
+				
+				xor edx, edx
+				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
+				
+			continue:
+				xor edx, edx
+				orgcode
+			#/assembler
+		
+		END
+		
+		#assembler [text_oCNpc_EV_PlaySound_push_color_1]
+			mov ecx, dword ptr [$const_float_big]
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_EV_PlaySound_push_color_2]
+			mov edx, dword ptr [$const_float_big]
+			orgcode
+		#/assembler
+
+	#/patch
+#/engine
