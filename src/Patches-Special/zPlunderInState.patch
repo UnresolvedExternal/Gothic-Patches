@@ -1,0 +1,62 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zPlunderInState]
+		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
+		INT text_oAIHuman_StandActions_call_OpenDeadNpc = ZenDef(0x00612C04, 0x00635B61, 0x0063C7E1, 0x00699051)
+		INT text_oAIHuman_StandActions_not_dead_npc = ZenDef(0x00612AF6, 0x00635A5F, 0x0063C72A, 0x00698F9A)
+		
+		INT field_oCNpc_States_curState_valid = 0x34
+		INT field_oCNpc_States_curState_prgIndex = 0x50
+		
+		INT field_oCNpc_state = ZenDef(0x470, 0x470, 0x4FC, 0x588)
+		
+		INT const_NPC_AISTATE_DEAD = -3
+		INT const_NPC_AISTATE_UNCONSCIOUS = -4
+		// end of engine specific
+		
+		#assembler [is_in_dead_state]
+			push ecx
+			mov eax, [ecx+$field_oCNpc_States_curState_valid]
+			test eax, eax
+			jz return
+			
+			mov eax, [ecx+$field_oCNpc_States_curState_prgIndex]
+			cmp eax, $const_NPC_AISTATE_DEAD
+			je return
+			
+			cmp eax, $const_NPC_AISTATE_UNCONSCIOUS
+			je return
+			
+			xor eax, eax
+			
+		return:
+			pop ecx
+			ret
+		#/assembler
+		
+		#assembler [text_oAIHuman_StandActions_call_OpenDeadNpc]
+			push ecx
+			
+			mov ecx, edi
+			cmp dword ptr [$engine_version], 1
+			je process
+			
+			mov ecx, ebx
+			cmp dword ptr [$engine_version], 2
+			je process
+			
+			mov ecx, esi
+			
+		process:
+			lea ecx, [ecx+$field_oCNpc_state]
+			call $is_in_dead_state
+			test eax, eax
+			pop ecx
+			jz $text_oAIHuman_StandActions_not_dead_npc
+			
+		continue:
+			orgcode
+		#/assembler
+	#/patch
+#/engine
