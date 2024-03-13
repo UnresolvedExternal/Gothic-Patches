@@ -1,0 +1,33 @@
+#engine [G2A]
+	#patch [zCustomSubmeshLimit]
+		// engine specific
+		INT text_zCProgMeshProto_Load_cmp_numSubMeshes_32 = 0x005CD4C6
+		INT text_zCProgMeshProto_Load_offset_AssertMessage = 0x005CD555
+		INT text_zCProgMeshProto_Load_lea_eax_buffer = 0x005CD59A
+		INT text_zCProgMeshProto_Load_lea_edi_buffer_0xC = 0x005CD5BC
+		
+		INT sizeof_zTPMProtoDirectorySubMesh = 80
+		
+		INT const_submesh_limit = 128
+		INT @AssertMessage = CreateMemString("numSubMeshes<128") + 8
+		// end of engine specific
+	
+		AllocPage(16, const_submesh_limit * sizeof_zTPMProtoDirectorySubMesh)
+		INT buffer = 16x00000000
+		INT buffer_with_offset = buffer + 0xC
+		
+		INT @text_zCProgMeshProto_Load_offset_AssertMessage = AssertMessage
+		
+		#assembler [text_zCProgMeshProto_Load_cmp_numSubMeshes_32]
+			cmp dword ptr [esi+0xA8], $const_submesh_limit
+		#/assembler
+		
+		#assembler [text_zCProgMeshProto_Load_lea_eax_buffer]
+			mov eax, $buffer
+		#/assembler
+		
+		#assembler [text_zCProgMeshProto_Load_lea_edi_buffer_0xC]
+			mov edi, $buffer_with_offset
+		#/assembler
+	#/patch
+#/engine
