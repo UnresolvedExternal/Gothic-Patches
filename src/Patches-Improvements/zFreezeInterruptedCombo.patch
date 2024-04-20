@@ -9,6 +9,7 @@
 		INT text_oCAniCtrl_Human_HitCombo_call_StartAni__s_walk_2 = ZenDef(0x006279B4, 0x0064CA34, 0x00653C17, 0x006B054F)
 		
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
+		INT func_zCModel_FadeOutAni = ZenDef(0x00564FA0, 0x0057D910, 0x00579B00, 0x0057F020)
 		
 		INT field_oCMsgAttack_hitAni = ZenDef(0x4C, 0x54, 0x4C, 0x4C)
 		INT field_zCModelAniActive_advanceDir = 0x8
@@ -37,6 +38,9 @@
 			jz continue
 			
 			mov dword ptr [eax+$field_zCModelAniActive_advanceDir], 0
+			mov ecx, [esp+4] ; model
+			push eax
+			call $func_zCModel_FadeOutAni
 			
 		continue:
 			pop eax
