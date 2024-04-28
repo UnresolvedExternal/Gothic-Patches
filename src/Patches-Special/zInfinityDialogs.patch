@@ -9,7 +9,12 @@
 		INT text_oCNpc_EV_PlaySound_push_color_1 = ZenDef(0x006B2D5B, 0x006E7275, 0x006F9C77, 0x00758AA7)
 		INT text_oCNpc_EV_PlaySound_push_color_2 = ZenDef(0x006B2DD8, 0x006E7306, 0x006F9CFC, 0x00758B1D)
 		
+		INT func_oCNpc_StopFaceAni = ZenDef(0x00695730, 0x006C7130, 0x006DA410, 0x00738B50)
+		
+		INT field_oCMsgConversation_f_no = ZenDef(0x90, 0x98, 0x90, 0x90)
 		INT field_oCMsgConversation_f_yes = ZenDef(0x94, 0x9C, 0x94, 0x94)
+		
+		INT offset_NPC_TALK_ANI = ZenDef(0x008DB990, 0x00922EE8, 0x00982FA4, 0x00AB244C)
 		
 		INT const_GAME_VIEW_CONVERSATION = 1
 		FLOAT const_float_big = 1000000000.0
@@ -17,70 +22,34 @@
 		INT value_EV_PlaySound_csg = 0
 		// end of engine specific
 		
-		#assembler [text_oCNpc_EV_PlaySound_need_store_csg]
-			mov dword ptr [$value_EV_PlaySound_csg], ebx
-			orgcode
+		#assembler [func_is_conversation]
+			push eax
+			mov eax, dword ptr [$value_EV_PlaySound_csg]
+			mov eax, [eax+$field_oCMsgConversation_f_yes]
+			cmp eax, $const_GAME_VIEW_CONVERSATION
+			pop eax
+			ret
 		#/assembler
 		
-		IF engine_version == 1
+		#assembler [func_test_expired]
+			push eax
+			mov eax, dword ptr [$value_EV_PlaySound_csg]
+			mov eax, [eax+$field_oCMsgConversation_f_no]
+			test eax, eax
+			pop eax
+			ret
+		#/assembler
 		
-			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
-				push ebx
-				mov ebx, dword ptr [$value_EV_PlaySound_csg]
-				mov edx, [ebx+$field_oCMsgConversation_f_yes]
-				pop ebx
-				cmp edx, $const_GAME_VIEW_CONVERSATION
-				jne continue
-				
-				xor edx, edx
-				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
-				
-			continue:
-				xor edx, edx
-				orgcode
-			#/assembler
-		
-		END
-		
-		IF engine_version == 2
-		
-			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
-				push ebx
-				mov ebx, dword ptr [$value_EV_PlaySound_csg]
-				mov ecx, [ebx+$field_oCMsgConversation_f_yes]
-				pop ebx
-				cmp ecx, $const_GAME_VIEW_CONVERSATION
-				jne continue
-				
-				xor ecx, ecx
-				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
-				
-			continue:
-				xor ecx, ecx
-				orgcode
-			#/assembler
-		
-		END
-		
-		IF engine_version >= 3
-		
-			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
-				push ebx
-				mov ebx, dword ptr [$value_EV_PlaySound_csg]
-				mov edx, [ebx+$field_oCMsgConversation_f_yes]
-				pop ebx
-				cmp edx, $const_GAME_VIEW_CONVERSATION
-				jne continue
-				
-				xor edx, edx
-				jmp $text_oCNpc_EV_PlaySound_test_f_no_end
-				
-			continue:
-				xor edx, edx
-				orgcode
-			#/assembler
-		
-		END
+		#assembler [func_oCNpc_stop_face]
+			push eax
+			push edx
+			mov eax, $offset_NPC_TALK_ANI
+			push eax
+			call $func_oCNpc_StopFaceAni
+			pop edx
+			pop eax
+			ret
+		#/assembler
 		
 		#assembler [text_oCNpc_EV_PlaySound_push_color_1]
 			mov ecx, dword ptr [$const_float_big]
@@ -91,6 +60,66 @@
 			mov edx, dword ptr [$const_float_big]
 			orgcode
 		#/assembler
-
+		
+		#assembler [text_oCNpc_EV_PlaySound_need_store_csg]
+			mov dword ptr [$value_EV_PlaySound_csg], ebx
+			orgcode
+		#/assembler
+		
+		IF engine_version == 2
+		
+			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
+				orgcode
+				test ecx, ecx
+				jz continue
+				
+				call $func_is_conversation
+				jnz continue
+				
+				call $func_test_expired
+				jg dont_stop
+				
+				push ecx
+				mov ecx, ebp
+				call $func_oCNpc_stop_face
+				pop ecx
+				
+			dont_stop:
+				xor ecx, ecx
+				
+			continue:
+			#/assembler
+		
+		ELSE
+			
+			#assembler [text_oCNpc_EV_PlaySound_test_f_no]
+				orgcode
+				test edx, edx
+				jz continue
+				
+				call $func_is_conversation
+				jnz continue
+				
+				push eax
+				mov eax, $engine_version
+				cmp eax, 4
+				pop eax
+				je dont_stop
+				
+				call $func_test_expired
+				jg dont_stop
+				
+				push ecx
+				mov ecx, edi
+				call $func_oCNpc_stop_face
+				pop ecx
+				
+			dont_stop:
+				xor edx, edx
+				
+			continue:
+			#/assembler
+		
+		END
 	#/patch
 #/engine
