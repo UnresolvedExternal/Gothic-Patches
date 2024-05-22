@@ -1,0 +1,17 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zResetMobStateOnStandup]
+		// engine specific
+		INT text_oCMobInter_CheckStateChange_mov_eax_state_target = ZenDef(0x0067EC86, 0x006ADCA0, 0x006C2409, 0x00720499)
+		INT text_oCMobInter_CheckStateChange_state_reset_end = text_oCMobInter_CheckStateChange_mov_eax_state_target + 20
+		
+		INT field_oCMobInter_state = ZenDef(0x1D4, 0x1D4, 0x1F4, 0x1F4)
+		INT field_oCMobInter_state_target = ZenDef(0x1DC, 0x1DC, 0x1FC, 0x1FC)
+		// end of engine specific
+		
+		#assembler [text_oCMobInter_CheckStateChange_mov_eax_state_target]
+			xor eax, eax
+			mov [esi+$field_oCMobInter_state], eax
+			mov [esi+$field_oCMobInter_state_target], eax
+		#/assembler [text_oCMobInter_CheckStateChange_state_reset_end]
+	#/patch
+#/engine
