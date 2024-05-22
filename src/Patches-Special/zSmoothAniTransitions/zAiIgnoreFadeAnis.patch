@@ -801,29 +801,15 @@
 			orgcode
 		#/assembler
 		
-		INT test_fading = 1
-		
-		#assembler [text_oCAniCtrl_Human_CheckFallStates_call_model_IsStateActive_s_falldn]
-			mov dword ptr [$test_fading], 0
-			orgcode
-			mov dword ptr [$test_fading], 1
-		#/assembler
-		
 		#assembler [text_zCModel_IsStateActive_jnz_cmp_layers]
 			orgcode
-			
-			cmp dword ptr [$test_fading], 0
-			je return
 			
 			push eax
 			mov eax, [ebp]
 			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
 			test eax, eax
-			pop eax
-			
+			pop eax			
 			jnz $text_zCModel_IsStateActive_fail_cmp_layers
-			
-		return:
 		#/assembler
 		
 		CALL(text_oCAIHuman_PC_CheckSpecialStates_call_model_IsAniActive_s_jump, func_zCModel_IsNotFadingAniActive)
