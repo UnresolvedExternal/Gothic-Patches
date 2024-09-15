@@ -1,0 +1,10 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zMaxUsedRings]
+		// engine specific
+		INT text_oCNpc_Equip_maxUsedRings = ZenDef(0x00696B65, 0x006C86B1, 0x006DB7C3, 0x00739F83) + 2
+		// end of engine specific
+		
+		// valid hex values are from '01' to '7F'
+		HEX @(text_oCNpc_Equip_maxUsedRings) = '04'
+	#/patch
+#/engine
