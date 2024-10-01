@@ -106,6 +106,8 @@
 		INT field_zCModel_numActiveAnis = 0x34
 		INT field_zCModel_aniChannels = 0x38
 		INT field_zCModelAni_aniID = 0x4C
+		INT field_zCModelAni_aniName = 0x24
+		INT field_zCModelAni_aniName_vector = field_zCModelAni_aniName + 8
 		INT field_zCModel_nodeList = ZenDef(0x64, 0x64, 0x70, 0x70)
 		INT field_zCModel_nodeList_numInArray = field_zCModel_nodeList + 8
 		INT field_zCAIPlayer_model = 0x68
@@ -116,10 +118,14 @@
 		INT func_oCAniCtrl_Human_IsWalking = ZenDef(0x006257E0, 0x0064A540, 0x00651860, 0x006AE0E0)
 		INT func_zCModel_GetActiveAni = ZenDef(0x00560D90, 0x00579220, 0x00575640, 0x0057AB60)
 		INT func_zCModel_StopAni = ZenDef(0x00560EE0, 0x00579370, 0x00575790, 0x0057ACB0)
+		int func__strcmp  = ZenDef(0x0077C060, 0x007BFE20, 0x007C9480, 0x007D5940)
 		
 		INT const_GAME_ACTION = 5
 		INT const_GAME_UP = 3
 		INT const_GAME_DOWN = 4
+		
+		INT offset_str_S_SLIDE = ZenDef(0x0083AD4C, 0x0088096C, 0x00890AB0, 0x0089ECF8)
+		INT offset_str_S_SLIDEB = ZenDef(0x0083AD40, 0x00880960, 0x00890AA4, 0x0089ECEC)
 		// end of engine specific
 		
 		#assembler [text_oCNpc_EV_AttackForward_mov_edi_ptr_edx]
@@ -801,15 +807,78 @@
 			orgcode
 		#/assembler
 		
+		INT ignore_sliding_fading = 0
+		
+		#assembler [text_oCAniCtrl_Human_CheckFallStates_call_model_IsStateActive_s_falldn]
+			mov dword ptr [$ignore_sliding_fading], 1
+			orgcode
+			mov dword ptr [$ignore_sliding_fading], 0
+		#/assembler
+		
+		// int __stdcall IsSlidingAniName(const char*)
+		#assembler [func_IsSlidingAniName]
+			mov eax, [esp+4]
+			test eax, eax
+			jz return
+			
+			push eax
+			push $offset_str_S_SLIDE
+			call $func__strcmp
+			add esp, 8
+			test eax, eax
+			jz return_true
+			
+			mov eax, [esp+4]
+			push eax
+			push $offset_str_S_SLIDEB
+			call $func__strcmp
+			add esp, 8
+			test eax, eax
+			jz return_true
+			
+			xor eax, eax
+			jmp return
+			
+		return_true:
+			mov eax, 1
+		
+		return:
+			ret 4
+		#/assembler
+		
 		#assembler [text_zCModel_IsStateActive_jnz_cmp_layers]
 			orgcode
 			
+			cmp dword ptr [$ignore_sliding_fading], 0
+			je do_test_fading
+			
+			push eax
+			push ecx
+			push edx
+			
+			mov eax, [ebp]
+			mov eax, [eax]
+			mov eax, [eax+$field_zCModelAni_aniName_vector]
+			push eax
+			call $func_IsSlidingAniName
+			test eax, eax
+			
+			pop edx
+			pop ecx
+			pop eax
+			
+			jnz return
+			
+		do_test_fading:
 			push eax
 			mov eax, [ebp]
 			mov eax, [eax+$field_zCModelAniActive_isFadingOut]
 			test eax, eax
-			pop eax			
+			pop eax
+			
 			jnz $text_zCModel_IsStateActive_fail_cmp_layers
+			
+		return:
 		#/assembler
 		
 		CALL(text_oCAIHuman_PC_CheckSpecialStates_call_model_IsAniActive_s_jump, func_zCModel_IsNotFadingAniActive)
