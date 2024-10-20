@@ -10,6 +10,7 @@
 		INT text_oCNpc_EV_AttackForward_mov_edi_ptr_edx = ZenDef(0x006AAF70, 0x006DDD38, 0x006F1353, 0x00750133)
 		INT text_oCNpc_EV_AttackForward_mov_edi_ptr_edx_after = text_oCNpc_EV_AttackForward_mov_edi_ptr_edx + 6
 		INT text_oCNpc_EV_AttackForward_epilogue = ZenDef(0x006AAF37, 0x006DDD48, 0x006F136A, 0x0075014A)
+		INT text_oCNpc_EV_PlayAni_mov_eax_1 = ZenDef(0x006B2013, 0x006E635E, 0x006F8EA1, 0x00757CD1)
 		INT text_oCAIHuman_BowMode_call_model_IsAniActive__s_aim_G1_G1 = 0x0061077D
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__s_hitf_G1_G1 = 0x006109F3
 		INT text_oCAIHuman_BowMode_mov_ebp_ptr_ecx__t_hitback_G1_G1 = 0x00610A40
@@ -127,6 +128,21 @@
 		INT offset_str_S_SLIDE = ZenDef(0x0083AD4C, 0x0088096C, 0x00890AB0, 0x0089ECF8)
 		INT offset_str_S_SLIDEB = ZenDef(0x0083AD40, 0x00880960, 0x00890AA4, 0x0089ECEC)
 		// end of engine specific
+		
+		#assembler [text_oCNpc_EV_PlayAni_mov_eax_1]
+			orgcode
+			cmp dword ptr [$engine_version], 1
+			jne since_g1a
+			
+			cmp dword ptr [esi+$field_zCModelAniActive_isFadingOut], 0
+			jmp set_eax
+			
+		since_g1a:
+			cmp dword ptr [edi+$field_zCModelAniActive_isFadingOut], 0
+			
+		set_eax:
+			setz al
+		#/assembler
 		
 		#assembler [text_oCNpc_EV_AttackForward_mov_edi_ptr_edx]
 			mov edi, [edx]
