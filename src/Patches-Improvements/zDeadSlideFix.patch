@@ -1,0 +1,49 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zDeadSlideFix]
+		// engine specific
+		INT text_zCAIPlayer_CheckFloorSliding_jp_low_slope = ZenDef(0x004FDC67, 0x00510F94, 0x0050A924, 0x0050D6D4)
+		INT text_zCAIPlayer_CheckFloorSliding_dont_slide = ZenDef(0x004FE11D, 0x005114FF, 0x0050AE69, 0x0050DC19)
+		
+		INT func___RTDynamicCast = ZenDef(0x0077709A, 0x007BAE5A, 0x007C457A, 0x007D0A3A)
+		
+		INT field_oCNpc_attribute = ZenDef(0x184, 0x184, 0x1A4, 0x1B8)
+		
+		INT offset_zCVob_type_descriptor = ZenDef(0x00829BBC, 0x0086F970, 0x0087FFC4, 0x0088DFE0)
+		INT offset_oCNpc_type_descriptor = ZenDef(0x0082D0B4, 0x00872E80, 0x0088335C, 0x008913B0)
+		// end of engine specific
+		
+		#assembler [func_zCVob_IsDeadNpc]
+			push 0
+			push $offset_oCNpc_type_descriptor
+			push $offset_zCVob_type_descriptor
+			push 0
+			push ecx
+			call $func___RTDynamicCast
+			add esp, 0x14
+			test eax, eax
+			jz return
+			
+			mov eax, [eax+$field_oCNpc_attribute]
+			test eax, eax
+			jg return
+			
+			mov eax, 1
+			
+		return:
+			ret
+		#/assembler
+		
+		#assembler [text_zCAIPlayer_CheckFloorSliding_jp_low_slope]
+			orgcode
+			push eax
+			push ecx
+			push edx
+			call $func_zCVob_IsDeadNpc
+			test eax, eax
+			pop edx
+			pop ecx
+			pop eax
+			jnz $text_zCAIPlayer_CheckFloorSliding_dont_slide
+		#/assembler
+	#/patch
+#/engine
