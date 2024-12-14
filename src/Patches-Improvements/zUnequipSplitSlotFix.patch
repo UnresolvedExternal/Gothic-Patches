@@ -1,0 +1,21 @@
+#engine [G2A]
+	#patch [zUnequipSplitSlotFix]
+		// engine specific
+		INT text_oCNpc_UnequipItem_jz_SplitSlot = 0x0073289B
+		INT text_oCNpc_UnequipItem_SplitSlot_failed = 0x0073294B
+		
+		INT func_oCNpc_IsInInv = ZenDef(0x006A4E00, 0x006D78B0, 0x006EA680, 0x00749160)
+		// end of engine specific
+		
+		#assembler [text_oCNpc_UnequipItem_jz_SplitSlot]
+			orgcode
+			
+			push -2147483648
+			push ebx
+			mov ecx, ebp
+			call $func_oCNpc_IsInInv
+			test eax, eax
+			jz $text_oCNpc_UnequipItem_SplitSlot_failed
+		#/assembler
+	#/patch
+#/engine
