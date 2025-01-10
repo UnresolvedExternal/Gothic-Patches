@@ -1,0 +1,39 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zNewTalentLimit]
+		// engine specific
+		INT engine_version = ZenDef(1, 2, 3, 4)
+		
+		INT text_oCNpcTalent_CreateTalentList_mem_size = ZenDef(0x0068A28E, 0x006BA81E, 0x006CE5EF, 0x0072C67F) + 1
+		INT text_oCNpcTalent_CreateTalentList_size = ZenDef(0x0068A2DB, 0x006BA866, 0x006CE63B, 0x0072C6CB) + 1
+		INT text_oCNpc_mem_size_G2 = ZenDef(0x00000000, 0x00000000, 0x006D0020, 0x0072E240) + 1
+		INT text_oCNpc_size_G1 = ZenDef(0x0068BD0A, 0x006BC3DC, 0x00000000, 0x00000000) + 4
+		INT text_oCNpc_size = ZenDef(0x0068BCF9, 0x006BC3CB, 0x006D005F, 0x0072E282) + 1
+		INT text_oCNpc_GetTalent_size = ZenDef(0x0068E19C, 0x006BEB5C, 0x006D257C, 0x00730A2C) + 2
+		INT text_oCNpc_SetTalentValue_size = ZenDef(0x0068E39C, 0x006BED7C, 0x006D275C, 0x00730C0C) + 2
+		INT text_oCNpc_GetTalentValue_size = ZenDef(0x0068E595, 0x006BEF99, 0x006D2935, 0x00730DE5) + 2
+		INT text_oCNpc_SetTalentSkill_size = ZenDef(0x0068E742, 0x006BF162, 0x006D2AE2, 0x00730F92) + 2
+		INT text_oCNpc_GetTalentSkill_size = ZenDef(0x0068ED65, 0x006BF999, 0x006D3365, 0x00731815) + 2
+		INT text_oCNpc_OpenScreen_Status_size = ZenDef(0x0069A943, 0x006CC8DA, 0x006DF644, 0x0073DE64) + 2
+		
+		INT const_TALENT_MAX = 31
+		// end of engine specific
+		
+		INT @(text_oCNpcTalent_CreateTalentList_mem_size) = INT @text_oCNpcTalent_CreateTalentList_mem_size & 0xFFFFFF00 | (const_TALENT_MAX * 4)  
+		INT @(text_oCNpcTalent_CreateTalentList_size) = const_TALENT_MAX
+		
+		IF engine_version <= 2
+			INT @(text_oCNpc_size_G1) = const_TALENT_MAX
+			INT @(text_oCNpc_size) = INT @text_oCNpc_size & 0xFFFFFF00 | const_TALENT_MAX
+		ELSE
+			INT @(text_oCNpc_mem_size_G2) = INT @text_oCNpc_mem_size_G2 & 0xFFFFFF00 | (const_TALENT_MAX * 4)
+			INT @(text_oCNpc_size) = const_TALENT_MAX
+		END
+		
+		INT @(text_oCNpc_GetTalent_size) = INT @text_oCNpc_GetTalent_size & 0xFFFFFF00 | const_TALENT_MAX
+		INT @(text_oCNpc_SetTalentValue_size) = INT @text_oCNpc_SetTalentValue_size & 0xFFFFFF00 | const_TALENT_MAX
+		INT @(text_oCNpc_GetTalentValue_size) = INT @text_oCNpc_GetTalentValue_size & 0xFFFFFF00 | const_TALENT_MAX
+		INT @(text_oCNpc_SetTalentSkill_size) = INT @text_oCNpc_SetTalentSkill_size & 0xFFFFFF00 | const_TALENT_MAX
+		INT @(text_oCNpc_GetTalentSkill_size) = INT @text_oCNpc_GetTalentSkill_size & 0xFFFFFF00 | const_TALENT_MAX
+		INT @(text_oCNpc_OpenScreen_Status_size) = INT @text_oCNpc_OpenScreen_Status_size & 0xFFFFFF00 | const_TALENT_MAX
+	#/patch
+#/engine

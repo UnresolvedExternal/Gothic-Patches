@@ -17,14 +17,14 @@
 		
 		#assembler [text_oCVisualFX_ProcessCollision_call_CreateAndPlay]
 			mov eax, [ebp+$field_oCVisualFX_origin]
-            push eax
-            mov eax, [esp+0x18] ; vobHit
-            push eax
-            lea eax, [ebp+$field_oCVisualFX_emFXCollDyn_S]
-            push eax
-            mov ecx, ebp
-            call $func_oCVisualFX_CreateAndCastFX
-            mov esi, eax
+			push eax
+			mov eax, [esp+0x18] ; vobHit
+			push eax
+			lea eax, [ebp+$field_oCVisualFX_emFXCollDyn_S]
+			push eax
+			mov ecx, ebp
+			call $func_oCVisualFX_CreateAndCastFX
+			mov esi, eax
 			test esi, esi
 			jz $text_oCVisualFX_ProcessCollision_zero_effect
 		#/assembler [text_oCVisualFX_ProcessCollision_call_SetInflictor_after]
