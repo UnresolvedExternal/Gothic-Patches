@@ -1,0 +1,15 @@
+#engine [G1, G1A]
+	#patch [zMoveSubtreeFix]
+		// engine specific
+		INT text_zCWorld_MoveVobSubtreeTo_cmp_firstChild = ZenDef(0x005F691A, 0x006178FA, 0x00000000, 0x00000000)
+		INT text_zCWorld_MoveVobSubtreeTo_cmp_fail = ZenDef(0x005F6925, 0x00617905, 0x00000000, 0x00000000)
+		// end of engine specific
+		
+		#assembler [text_zCWorld_MoveVobSubtreeTo_cmp_firstChild]
+			test ecx, ecx
+			jz $text_zCWorld_MoveVobSubtreeTo_cmp_fail
+			
+			orgcode
+		#/assembler
+	#/patch
+#/engine
