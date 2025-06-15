@@ -1,0 +1,42 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zAddTremorSafe]
+		// engine specific
+		INT text_zCModel_DoDoAniEvents_call_AddTremor = ZenDef(0x005629B0, 0x0057B0D0, 0x0057725A, 0x0057C77A)
+		INT text_zCEarthquake_OnTrigger = ZenDef(0x005E7058, 0x00607398, 0x0060C908, 0x00613FC8)
+		INT text_zCEarthquake_OnUntrigger = ZenDef(0x005E70A8, 0x006073F8, 0x0060C958, 0x00614018)
+		// end of engine specific
+		
+		#assembler [text_zCModel_DoDoAniEvents_call_AddTremor]
+			test ecx, ecx
+			jnz continue
+			
+			add esp, 0x10
+			jmp $text_zCModel_DoDoAniEvents_call_AddTremor + 5
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCEarthquake_OnTrigger]
+			test ecx, ecx
+			jnz continue
+			
+			add esp, 0x10
+			jmp $text_zCEarthquake_OnTrigger + 5
+			
+		continue:
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCEarthquake_OnUntrigger]
+			test ecx, ecx
+			jnz continue
+			
+			add esp, 0x10
+			jmp $text_zCEarthquake_OnUntrigger + 5
+			
+		continue:
+			orgcode
+		#/assembler
+	#/patch
+#/engine

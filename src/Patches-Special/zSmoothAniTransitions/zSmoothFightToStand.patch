@@ -45,6 +45,7 @@
 		
 		INT field_oCNpc_anictrl = ZenDef(0x9B8, 0x9C0, 0x8EC, 0x980)
 		INT field_oCNpc_human_ai = ZenDef(0x9B4, 0x9BC, 0x8E8, 0x97C)
+		INT field_oCNpc_interactItemCurrentState = ZenDef(0x9A4, 0x9A8, 0x8D8, 0x96C)
 		INT field_oCNpc_interactItemTargetState = ZenDef(0x9A8, 0x9AC, 0x8DC, 0x970)
 		INT field_oCAniCtrl_Human_s_walk = 0x698
 		INT field_oCAniCtrl_Human_s_sneak = 0xA20
@@ -330,6 +331,10 @@
 			cmp eax, -1
 			jne return
 			
+			mov eax, [ecx+$field_oCNpc_interactItemCurrentState]
+			test eax, eax
+			jnz return
+			
 			mov ecx, [ecx+$field_oCNpc_anictrl]
 			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]
 			push eax
@@ -358,6 +363,10 @@
 			mov eax, [ecx+$field_oCNpc_interactItemTargetState]
 			cmp eax, -1
 			jne return
+			
+			mov eax, [ecx+$field_oCNpc_interactItemCurrentState]
+			test eax, eax
+			jnz return
 			
 			mov ecx, [ecx+$field_oCNpc_anictrl]
 			mov eax, [ecx+$field_oCAniCtrl_Human__s_walk]

@@ -1,0 +1,53 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zSetItemOnEquip]
+		// engine specific
+		INT text_oCNpc_AddItemEffects_after_self = ZenDef(0x0068F762, 0x006C03F2, 0x006D3D4D, 0x007321FD)
+		INT text_oCNpc_RemoveItemEffects_after_self = ZenDef(0x0068F8C6, 0x006C055A, 0x006D3EA1, 0x00732351)
+		
+		INT func_zSTRING_zSTRING = ZenDef(0x004013A0, 0x004010C0, 0x004010C0, 0x004010C0)
+		INT func_zSTRING_Destructor = ZenDef(0x00401260, 0x00401160, 0x00401160, 0x00401160)
+		INT func_zCParser_SetInstance = ZenDef(0x006EB3C0, 0x00724640, 0x00734E30, 0x00794870)
+		
+		INT offset_parser = ZenDef(0x008DCE08, 0x00925048, 0x00984C08, 0x00AB40C0)
+		INT offset_str_ITEM = ZenDef(0x0082E294, 0x00873D9C, 0x00884208, 0x0089225C)
+		
+		INT sizeof_zSTRING = 20
+		
+		INT var_oCNpc_ItemEffects_item = 0x30 + 4
+		// end of engine specific
+		
+		#assembler [func_SetItem]
+			sub esp, $sizeof_zSTRING
+			mov ecx, esp
+			push $offset_str_ITEM
+			call $func_zSTRING_zSTRING
+			
+			mov eax, [esp+$sizeof_zSTRING+4]
+			mov ecx, esp
+			push eax
+			push ecx
+			mov ecx, $offset_parser
+			call $func_zCParser_SetInstance
+			
+			mov ecx, esp
+			call $func_zSTRING_Destructor
+			
+			add esp, $sizeof_zSTRING
+			ret 4
+		#/assembler
+		
+		#assembler [text_oCNpc_AddItemEffects_after_self]
+			mov eax, [esp+$var_oCNpc_ItemEffects_item]
+			push eax
+			call $func_SetItem
+			orgcode
+		#/assembler
+		
+		#assembler [text_oCNpc_RemoveItemEffects_after_self]
+			mov eax, [esp+$var_oCNpc_ItemEffects_item]
+			push eax
+			call $func_SetItem
+			orgcode
+		#/assembler
+	#/patch
+#/engine
