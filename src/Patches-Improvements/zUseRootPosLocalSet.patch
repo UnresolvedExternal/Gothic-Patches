@@ -1,0 +1,37 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zUseRootPosLocalSet]
+		// engine specific
+		INT text_zCModel_AdvanceAnis_prologue = ZenDef(0x00562CDD, 0x0057B43D, 0x0057757D, 0x0057CA98)
+		
+		INT text_zCModel_AdvanceAnis_lea_reg_rootPosLocal_1 = ZenDef(0x005632D4, 0x0057BAA0, 0x00577CC5, 0x0057D1E5)
+		INT text_zCModel_AdvanceAnis_lea_reg_rootPosLocal_2 = ZenDef(0x005636C9, 0x0057BF0A, 0x005780C1, 0x0057D5E1)
+		INT text_zCModel_AdvanceAnis_call_Alg_Prod_rootPosLocal = ZenDef(0x00563A2B, 0x0057C245, 0x00578424, 0x0057D946)
+		INT text_zCModel_AdvanceAnis_call_Alg_Prod_rootPosLocal_end = ZenDef(0x00563A40, 0x0057C25A, 0x00578439, 0x0057D95B)
+		
+		INT value_rootPosLocalSet = 0
+		// end of engine specific
+		
+		#assembler [text_zCModel_AdvanceAnis_prologue]
+			mov dword ptr [$value_rootPosLocalSet], 0
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCModel_AdvanceAnis_lea_reg_rootPosLocal_1]
+			mov dword ptr [$value_rootPosLocalSet], 1
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCModel_AdvanceAnis_lea_reg_rootPosLocal_2]
+			mov dword ptr [$value_rootPosLocalSet], 1
+			orgcode
+		#/assembler
+		
+		#assembler [text_zCModel_AdvanceAnis_call_Alg_Prod_rootPosLocal]
+			mov eax, dword ptr [$value_rootPosLocalSet]
+			test eax, eax
+			jz $text_zCModel_AdvanceAnis_call_Alg_Prod_rootPosLocal_end
+			
+			orgcode
+		#/assembler
+	#/patch
+#/engine

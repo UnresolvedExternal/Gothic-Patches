@@ -1,0 +1,9 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zProjectileDistance]
+		// engine specific
+		INT oCVisualFX_CalcTrajectory_push_distance = ZenDef(0x004882D5, 0x004937E7, 0x0048E667, 0x00490073) + 1;
+		// end of engine specific
+		
+		FLOAT @(oCVisualFX_CalcTrajectory_push_distance) = 5000.0
+	#/patch
+#/engine

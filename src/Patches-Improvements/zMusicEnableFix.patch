@@ -1,0 +1,19 @@
+#engine [G2A]
+	#patch [zMusicEnableFix]
+		// engine specific
+		INT text_zCAICamera_DoAI_call_SetAutochange = 0x004A5051
+		INT text_zCAICamera_DoAI_call_SetAutochange_end = text_zCAICamera_DoAI_call_SetAutochange + 5
+		
+		INT offset_zCMusicSystem_s_musicSystemDisabled = 0x008D1F18
+		// end of engine specific
+		
+		#assembler [text_zCAICamera_DoAI_call_SetAutochange]
+			mov eax, $offset_zCMusicSystem_s_musicSystemDisabled
+			mov eax, [eax]
+			test eax, eax
+			jnz $text_zCAICamera_DoAI_call_SetAutochange_end
+
+			orgcode
+		#/assembler
+	#/patch
+#/engine

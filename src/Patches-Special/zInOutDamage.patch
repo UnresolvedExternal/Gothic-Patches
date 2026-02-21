@@ -1,0 +1,49 @@
+#engine [G1, G1A, G2, G2A]
+	#patch [zInOutDamage]
+		// engine specific
+		INT text_oCNpc_OnDamage_Hit_call_ChangeAttribute = ZenDef(0x007377E7, 0x00776CE9, 0x0078380E, 0x0066CACE)
+		
+		INT func_oCNpc_IsSelfPlayer = ZenDef(0x0069E9E0, 0x006D0D80, 0x006E3BA0, 0x007425B0)
+		
+		INT field_oCNpc_oSDamageDescriptor_pNpcAttacker = 0x8
+		
+		INT var_oCNpc_OnDamage_Hit_desc = ZenDef(0x22C, 0x234, 0x28C, 0x28C)
+		
+		FLOAT incoming_damage_mult = 2.0
+		FLOAT outgoing_damage_mult = 0.5
+		// end of engine specific
+		
+		#assembler [text_oCNpc_OnDamage_Hit_call_ChangeAttribute]
+			mov eax, [esp+$var_oCNpc_OnDamage_Hit_desc]
+			mov eax, [eax+$field_oCNpc_oSDamageDescriptor_pNpcAttacker]
+			test eax, eax
+			jz return
+			
+			push ecx
+			mov ecx, eax
+			call $func_oCNpc_IsSelfPlayer
+			pop ecx
+			test eax, eax
+			jnz player_is_attacker
+			
+			push ecx
+			call $func_oCNpc_IsSelfPlayer
+			pop ecx
+			test eax, eax
+			jz return
+			
+			fld dword ptr [$incoming_damage_mult]
+			jmp calculate
+			
+		player_is_attacker:
+			fld dword ptr [$outgoing_damage_mult]
+			
+		calculate:
+			fimul dword ptr [esp+4] 
+			fistp dword ptr [esp+4]
+			
+		return:
+			orgcode
+		#/assembler
+	#/patch
+#/engine
