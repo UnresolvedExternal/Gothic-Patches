@@ -75,6 +75,8 @@
 		INT text_oCAniCtrl_Human__Stand_cmp_protoAni__s_walkl = ZenDef(0x0062DE29, 0x006535FE, 0x0065AC39, 0x006B75C9)
 		INT text_oCAniCtrl_Human__Stand_success_cmp_protoAni__s_walkl = ZenDef(0x0062DE78, 0x0065364A, 0x0065AC88, 0x006B7618)
 		INT text_oCAniCtrl_Human__Stand_call_model_IsAniActive__s_aim = ZenDef(0x0062E002, 0x006537F9, 0x0065AE12, 0x006B77A2)
+		INT text_oCAniCtrl_Human__Stand_call_SetCollDetStat = ZenDef(0x0062E084, 0x00653882, 0x0065AE94, 0x006B7824)
+		INT text_oCAniCtrl_Human__Stand_call_SetCollDetStat_end = text_oCAniCtrl_Human__Stand_call_SetCollDetStat + 5
 		INT text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni = ZenDef(0x006229E8, 0x00647198, 0x0064E878, 0x006AB0F8)
 		INT text_oCAniCtrl_Human_CorrectAniStates_continue_search = text_oCAniCtrl_Human_CorrectAniStates_mov_reg_protoAni + 7
 		INT text_oCAniCtrl_Human_DrawWeapon1_call_zCModel_GetAniFromAniID = ZenDef(0x006294CA, 0x0064E73A, 0x00655CAA, 0x006B263A)
@@ -98,6 +100,8 @@
 		INT field_oCAniCtrl_Human__s_walkr = 0x1020
 		INT field_oCAniCtrl_Human__t_walk_2_walkl = 0x100C
 		INT field_oCAniCtrl_Human__t_walkr_2_walk = 0x1024
+		INT field_oCAniCtrl_Human_t_jumpuplow_2_stand = 0xA10
+		INT field_oCAniCtrl_Human_t_jumpupmid_2_stand = 0xA1C
 		INT field_zCModelAniActive_isFadingOut = 0x1C
 		INT field_zTNodeAni_modelAni = 0x0
 		INT field_zTNodeAni_weight = 0x4
@@ -128,6 +132,39 @@
 		INT offset_str_S_SLIDE = ZenDef(0x0083AD4C, 0x0088096C, 0x00890AB0, 0x0089ECF8)
 		INT offset_str_S_SLIDEB = ZenDef(0x0083AD40, 0x00880960, 0x00890AA4, 0x0089ECEC)
 		// end of engine specific
+		
+		#assembler [text_oCAniCtrl_Human__Stand_call_SetCollDetStat]
+			push eax
+			push ecx
+			push edx
+			
+			mov eax, [esi+$field_oCAniCtrl_Human_t_jumpuplow_2_stand]
+			push eax
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetActiveAni
+			test eax, eax
+			jnz no_stat_coll
+			
+			mov eax, [esi+$field_oCAniCtrl_Human_t_jumpupmid_2_stand]
+			push eax
+			mov ecx, [esi+$field_zCAIPlayer_model]
+			call $func_zCModel_GetActiveAni
+			test eax, eax
+			jz continue
+			
+		no_stat_coll:
+			pop edx
+			pop ecx
+			pop eax
+			jmp $text_oCAniCtrl_Human__Stand_call_SetCollDetStat_end
+		
+		continue:
+			pop edx
+			pop ecx
+			pop eax
+			
+			orgcode
+		#/assembler
 		
 		#assembler [text_oCNpc_EV_PlayAni_mov_eax_1]
 			orgcode
